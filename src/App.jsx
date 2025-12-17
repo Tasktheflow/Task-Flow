@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router";
-import Landingpage from "./pages/Landingpage/landingpage";
+import Landingpage from "./pages/Landingpage/Landingpage";
 import SignupPage from "../src/pages/SignupPage/SignupPage";
 import SigninPage from "../src/pages/SigninPage/Signinpage";
 import Dashboard from "../src/pages/Dashboard/Dashboard";
