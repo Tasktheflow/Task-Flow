@@ -1,0 +1,81 @@
+
+.navbar{
+    background-image: url('../../assets/istockphoto-1483863447-2048x2048 1.png');
+    background-size: cover;
+    background-position: center;
+    font-family:"Inter", sans-serif;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding-top: 34px;
+    padding-left: 40px;
+    padding-right: 41px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.logo-div{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.logo-div h4{
+font-weight: 600;
+font-style:  Bold;
+font-size: 20px;
+line-height: 100%;
+letter-spacing: 0%;
+}
+
+.task{
+   color:  rgba(5, 163, 1, 1);
+}
+
+.flow{
+    color: rgba(0, 0, 0, 1);
+}
+
+.navlinks{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-ul{
+    display: flex;
+    align-items: center;
+    gap: 40px; 
+}
+
+.nav-ul li{
+font-weight: 400;
+font-style: Bold;
+font-size: 14px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(0, 0, 0, 1);
+}
+
+.nav-btn{
+background-color: rgba(193, 255, 196, 1);
+border-radius: 8px;
+padding: 8px;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(0, 0, 0, 1);
+
+}
+.navlinks a{
+    cursor: pointer;
+     transition: color 0.3s ease;
+}
+
+.navlinks a:hover{
+    cursor: pointer;
+    color: #1AD5FE;
+}
