@@ -1,10 +1,11 @@
 import { useState } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router";
-import Landingpage from "../src/pages/Landingpage/Landingpage";
+import Landingpage from "./pages/Landingpage/landingpage";
 import SignupPage from "../src/pages/SignupPage/SignupPage";
 import SigninPage from "../src/pages/SigninPage/Signinpage";
 import Dashboard from "../src/pages/Dashboard/Dashboard";
+
 
 function App() {
   const [count, setCount] = useState(0);
@@ -12,7 +13,7 @@ function App() {
   return (
     <div>
         <Routes>
-          <Route path="/" element={<Landingpage />} />
+          <Route path="/" element={<Landingpage/>} />
           <Route path="/Signup" element={<SignupPage />} />
           <Route path="/Signin" element={<SigninPage />} />
           <Route path="/Dashboard" element={<Dashboard />} />

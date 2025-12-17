@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '../../components/Header/Header'
 
-const landingpage = () => {
+const Landingpage = () => {
   return (
     <div>
       <Header/>
@@ -9,4 +9,4 @@ const landingpage = () => {
   )
 }
 
-export default landingpage
+export default Landingpage
