@@ -11,6 +11,7 @@ import Inbox from "./pages/Inbox/Inbox";
 import Calender from "./pages/Calender/Calender";
 import Settings from "./pages/Settings/Settings";
 import { ProjectsProvider } from "./components/Contexts/ProjectsContext";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,19 +19,19 @@ function App() {
   return (
     <div>
       <ProjectsProvider>
-
-      <Routes>
-        <Route path="/" element={<Landingpage />} />
-        <Route path="/Signup" element={<SignupPage />} />
-        <Route path="/Signin" element={<SigninPage />} />
-        <Route path="/dashboard" element={<Dashboard />}>
-          <Route index element={<DashHome />} />
-          <Route path="projects" element={<Projects />} />
-          <Route path="inbox" element={<Inbox />} />
-          <Route path="calender" element={<Calender />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-      </Routes>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Landingpage />} />
+          <Route path="/Signup" element={<SignupPage />} />
+          <Route path="/Signin" element={<SigninPage />} />
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<DashHome />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="inbox" element={<Inbox />} />
+            <Route path="calender" element={<Calender />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        </Routes>
       </ProjectsProvider>
     </div>
   );

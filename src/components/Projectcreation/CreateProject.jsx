@@ -103,16 +103,16 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
     }
     };
   
-    const handleCancel = () => {
-      setFormData({
-        title: "",
-        description: "",
-        color: "#10B981",
-        teamMembers: [],
-      });
-      setErrors({});
-      setSubmitted(false);
-    };
+    // const handleCancel = () => {
+    //   setFormData({
+    //     title: "",
+    //     description: "",
+    //     color: "#10B981",
+    //     teamMembers: [],
+    //   });
+    //   setErrors({});
+    //   setSubmitted(false);
+    // };
   
     const toggleTeamMember = (memberId) => {
       setFormData((prev) => ({
