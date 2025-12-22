@@ -1,0 +1,90 @@
+.Landingpagecont4{
+    font-family: "Inter", sans-serif;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    background-color: rgba(217, 217, 217, 1);
+    padding-top: 96px;
+    padding-left: 63px;
+    padding-right:64px ;
+    padding-bottom:96px ;
+
+}
+
+.cont4{
+    max-width: 1313px;
+
+}
+
+.Landingpagecont4 h6,
+.Landingpagecont4 p{
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(0, 0, 0, 1);
+}
+
+.Landingpagecont4 h6{
+    margin-bottom: 9px;
+    text-align: center;
+}
+
+.Landingpagecont4 p{
+    margin-bottom: 43px;
+    text-align: center;
+}
+
+/* cards section */
+.features-cont4{
+    display: flex;
+    align-items: center;
+    gap: 49px;
+
+}
+
+.cards-cont4{
+    max-width: 405px;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 16px;
+    border: 1px solid rgba(161, 163, 171, 0.5);
+    padding-top:6px ;
+    padding-bottom: 17px;
+    padding-left:16px ;
+    padding-right:13px ;
+
+}
+.cards-cont4 h5 {
+    max-width: 376px;
+font-weight: 300;
+font-style: Light;
+font-size: 16px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(0, 0, 0, 1);
+margin-bottom: 19px;
+margin-top: 33px;
+
+}
+
+.circle-cont4{
+    width: 364px;
+    display: inline-flex;
+    gap: 21px;
+    align-items: center;
+
+
+}
+
+.circle-cont4 h6{
+max-width: 281px;
+font-weight: 400;
+font-style: Regular;
+font-size: 16px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(0, 0, 0, 1);
+text-align: start;
+
+}
