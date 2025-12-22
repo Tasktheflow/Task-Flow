@@ -11,13 +11,17 @@ import { IoMdCalendar } from "react-icons/io";
 import { Users } from "lucide-react";
 
 const Dashboard = () => {
-  const linkClass = (isactive) => {};
+  
 
   return (
-    <div className=" h-screen flex flex-col">
+   
+     <div className=" h-screen flex flex-col">
       <div className=" sticky top-0 z-10">
         <DashHeader />
       </div>
+
+  {/* sidebar Navigation */}
+
       <div className=" flex flex-1 overflow-hidden">
         <aside className=" w-[326px] px-[17px] py-10 flex flex-col justify-between">
           <div className=" flex flex-col gap-3">
@@ -120,6 +124,9 @@ const Dashboard = () => {
             <p className=" text-[#05A301] cursor-pointer">Logout</p>
           </div>
         </aside>
+
+{/* Different pages showcase */}
+
         <div className="  flex-1 overflow-y-auto">
           <div className="w-full ">
             <Outlet />
