@@ -1,0 +1,91 @@
+.Landingpagecont5{
+    font-family: "Inter", sans-serif;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    background-color:rgba(193, 255, 196, 1);
+    padding-top: 122px;
+    padding-left: 420px;
+    padding-right:421px ;
+    padding-bottom:121px ;
+
+}
+
+.Landingpagecont5 h5,
+.Landingpagecont5 h6{
+font-weight: 500;
+font-style: Medium;
+font-size: 16px;
+line-height: 100%;
+letter-spacing: 0%;
+text-align: center;
+color: rgba(0, 0, 0, 1);
+
+}
+
+.Landingpagecont5 h5{
+    margin-bottom: 20px;
+}
+
+.Landingpagecont5 h6{
+    margin-bottom: 43px;
+}
+
+/* buttons styling */
+
+.btn1-cont5{
+    display: flex;
+    gap: 34px;
+    align-items: center;
+    margin-inline: 148px;
+}
+.btns-cont5{
+  background: rgba(5, 163, 1, 1);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  display: inline-flex;
+  gap: 4px;
+  padding: 16px;
+  align-items: center;
+  max-width: 172px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 1);
+font-weight: 500;
+font-style: Medium;
+font-size: 20px;
+line-height: 100%;
+letter-spacing: 0%;
+transition: background-color 0.25s ease;
+}
+
+.btns-cont5:hover{
+    background-color: aqua;
+}
+
+.arrow-icon5{
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btns-cont5:hover .arrow-icon5{
+    transform: translateX(10px);
+    opacity: 0.9;
+}
+
+/* second button */
+.btn2-cont5{
+    width: 97px;
+    border: 1px solid rgba(5, 163, 1, 1);
+    border-radius: 8px;
+    padding: 16px;
+    
+font-weight: 500;
+font-style: Medium;
+font-size: 20px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(5, 163, 1, 1);
+
+}
+.btn2-cont5:hover{
+    background-color: aqua;
+}

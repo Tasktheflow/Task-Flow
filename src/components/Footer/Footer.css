@@ -1,0 +1,124 @@
+.Footer{
+    background-color: rgba(0, 0, 0, 1);
+    font-family: "Inter", sans-serif;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.Cont-foot{
+    display: flex;
+    gap: 124px;
+
+
+}
+
+.text-foot{
+    max-width: 315px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 77px;
+    margin-left: 102px;
+    margin-bottom: 153.1px;
+}
+
+
+
+.text-foot h6{
+font-family: Inter;
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(255, 255, 255, 0.5);
+}
+
+
+.link1-foot h6,
+.link2-foot h6,
+.link3-foot h6{
+
+font-weight: 500;
+font-style: Medium;
+font-size: 20px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(255, 255, 255, 1);
+margin-bottom: 16px;
+
+}
+
+.links-foot{
+    max-width: 576px;
+    display: flex;
+     margin-top: 77px;
+     gap: 165px;
+     margin-bottom: 95px;
+    margin-right: 323px;
+
+}
+
+.links-foot ul{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+
+}
+
+
+.links-foot li{
+font-weight: 500;
+font-style: Medium;
+font-size: 14px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(255, 255, 255, 0.5);
+}
+
+.link1-foot{
+    max-width: 76px;
+}
+
+.link2-foot{
+    max-width: 92px;
+}
+
+.link3-foot{
+    max-width: 78px;
+}
+
+/* line section */
+.line-foot{
+    margin-inline: 101px;
+}
+
+.flex-foot{
+    display: flex;
+    gap: 849px;
+    padding-bottom: 72px;
+
+
+}
+
+.flex1-foot h6{
+font-weight: 500;
+font-style: Medium;
+font-size: 15px;
+line-height: 100%;
+letter-spacing: 0%;
+color: rgba(255, 255, 255, 0.5);
+margin-top: 15px;
+margin-left: 102px;
+}
+
+.flex2-foot{
+    display: inline-flex;
+    width: 120px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 9px;
+
+}
