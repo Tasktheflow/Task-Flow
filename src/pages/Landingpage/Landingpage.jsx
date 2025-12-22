@@ -7,7 +7,7 @@ import Landingpagecont4 from '../../components/Landingpagecont4/Landingpagecont4
 import Landingpagecont5 from '../../components/Landingpagecont5/Landingpagecont5'
 import Footer from '../../components/Footer/Footer'
 
-const landingpage = () => {
+const Landingpage = () => {
   return (
     <div>
       <Header/>
@@ -21,4 +21,4 @@ const landingpage = () => {
   )
 }
 
-export default landingpage
+export default Landingpage
