@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router";
 import Landingpage from "./pages/Landingpage/Landingpage";
 import SignupPage from "../src/pages/SignupPage/SignupPage";
 import SigninPage from "../src/pages/SigninPage/Signinpage";
@@ -12,6 +12,7 @@ import Calender from "./pages/Calender/Calender";
 import Settings from "./pages/Settings/Settings";
 import { ProjectsProvider } from "./components/Contexts/ProjectsContext";
 import ScrollToTop from "./components/ScrollToTop";
+import ProjectDetails from "./pages/Projects/ProjectDetails";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,7 +27,10 @@ function App() {
           <Route path="/Signin" element={<SigninPage />} />
           <Route path="/dashboard" element={<Dashboard />}>
             <Route index element={<DashHome />} />
-            <Route path="projects" element={<Projects />} />
+            <Route path="projects" element={<Projects />}>
+              <Route path=":projectId" element={<ProjectDetails />} />
+            </Route>
+
             <Route path="inbox" element={<Inbox />} />
             <Route path="calender" element={<Calender />} />
             <Route path="settings" element={<Settings />} />
