@@ -217,7 +217,7 @@ const DashHome = () => {
             <p className="text-[15px]/[19px] font-light mb-[26px] W-[247px]">
               Start tracking your work by adding a task
             </p>
-            <button className="w-full bg-[#7600CA] text-white py-2 rounded-lg hover:bg-purple-600 transition-colors cursor-pointer">
+            <button className="w-full bg-[#7600CA] text-white py-2 rounded-lg hover:bg-purple-600 transition-colors cursor-pointer"  onClick={() => navigate("/dashboard/projects")}>
               + Create Task
             </button>
           </div>
@@ -297,7 +297,7 @@ const DashHome = () => {
               <button className=" text-white bg-[#05A301] px-[26.5px] py-2.5 rounded-lg shadow-[0px_1px_4px_0px_#00000040] cursor-pointer" onClick={() => setShowCreateModal(true)}>
                 + Create Your First Project
               </button>
-              <button className=" py-2.5 w-[247px] rounded-lg shadow-[0px_1px_4px_0px_#00000040] border border-[#05A301] text-[#05A301] cursor-pointer">
+              <button className=" py-2.5 w-[247px] rounded-lg shadow-[0px_1px_4px_0px_#00000040] border border-[#05A301] text-[#05A301] cursor-pointer" onClick={() => navigate("/dashboard/projects")}>
                 + Add A Task
               </button>
             </div>
