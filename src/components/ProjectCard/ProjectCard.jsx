@@ -35,12 +35,12 @@ const ProjectCard = ({ project }) => {
           <img
             src={pic}
             alt="User 2"
-            class="w-10 h-10 rounded-full object-cover -ml-4"
+            class="w-10 h-10 rounded-full object-cover -ml-6"
           />
           <img
             src={pic}
             alt="User 2"
-            class="w-10 h-10 rounded-full object-cover -ml-4"
+            class="w-10 h-10 rounded-full object-cover -ml-6"
           />
         </div>
       </div>
