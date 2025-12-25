@@ -1,18 +1,12 @@
  .login-container {
     display: flex;
     align-items: center;
-    /* gap: 124px;/ */
-    justify-content: space-between;
     background-image: url('../../assets/istockphoto-1483863447-2048x2048 1.png');
-    padding-left:99px ;
-    padding-right: 99px;
 } 
 .logo{
     font-family: Inter;
 font-weight: 600;
-font-style: Semi Bold;
 font-size: 36px;
-/* leading-trim: NONE; */
 line-height: 100%;
 letter-spacing: 0%;
 text-align: center;
@@ -81,6 +75,7 @@ padding-bottom: 15px;
     gap: 20px;
     width: 331px;
 height: 40px;
+padding-inline: 14px;
 /* angle: 0 deg; */
 /* opacity: 1; */
 border-radius: 5px;
@@ -88,7 +83,6 @@ border-width: 1px;
 top: 20px;
 left: 20px;
 align-items: center;
-margin-bottom: 20px;
 margin-left: 20px;
 border: 1px solid #565454;
 /* margin-right: 10px; */
@@ -162,6 +156,7 @@ padding-top: 60px;
 }
 .error{
     color: red;
+    margin-left: 20px;
 }
 
  /* ===== TABLET ===== */
