@@ -1,6 +1,6 @@
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
-import TaskCard from "../TaskCard/TaskCard";
+import TaskCard from "../Taskcard/Taskcard";
 
 const Board = ({ board }) => {
   const { setNodeRef } = useDroppable({ id: board.id });
