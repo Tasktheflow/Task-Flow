@@ -89,39 +89,56 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
 
           {/* Status + Priority */}
           <div className="grid grid-cols-2 gap-3">
-            <Dropdown
-              label="Status"
-              required
-              value={form.status}
-              onChange={(value) =>
-                setForm((prev) => ({ ...prev, status: value }))
-              }
-              options={[
-                { label: "To-Do", value: "todo" },
-                { label: "In Progress", value: "progress" },
-                { label: "Review", value: "review" },
-                { label: "Done", value: "done" },
-              ]}
-            />
+            <div>
+              <Dropdown
+                label="Status"
+                required
+                value={form.status}
+                onChange={(value) => {
+                  setForm((prev) => ({ ...prev, status: value }));
+                  if (errors.status) {
+                    setErrors((prev) => ({ ...prev, status: "" }));
+                  }
+                }}
+                options={[
+                  { label: "To-Do", value: "todo" },
+                  { label: "In Progress", value: "progress" },
+                  { label: "Review", value: "review" },
+                  { label: "Done", value: "done" },
+                ]}
+              />
 
-            <Dropdown
-              label="Priority"
-              required
-              value={form.priority}
-              onChange={(value) =>
-                setForm((prev) => ({ ...prev, priority: value }))
-              }
-              options={[
-                { label: "Low", value: "low" },
-                { label: "Medium", value: "medium" },
-                { label: "High", value: "high" },
-              ]}
-            />
+              {errors.status && (
+                <p className="text-red-500 text-xs mt-1">{errors.status}</p>
+              )}
+            </div>
+
+            <div>
+              <Dropdown
+                label="Priority"
+                required
+                value={form.priority}
+                onChange={(value) => {
+                  setForm((prev) => ({ ...prev, priority: value }));
+                  if (errors.priority) {
+                    setErrors((prev) => ({ ...prev, priority: "" }));
+                  }
+                }}
+                options={[
+                  { label: "Low", value: "low" },
+                  { label: "Medium", value: "medium" },
+                  { label: "High", value: "high" },
+                ]}
+              />
+              {errors.priority && (
+                <p className="text-red-500 text-xs mt-1">{errors.priority}</p>
+              )}
+            </div>
           </div>
 
           {/* Assign + Due date */}
           <div className="grid grid-cols-2 gap-3">
-             <Dropdown
+            <Dropdown
               label="Assign To"
               value={form.assignee}
               onChange={(value) =>

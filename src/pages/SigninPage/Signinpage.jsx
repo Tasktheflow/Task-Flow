@@ -19,8 +19,8 @@ import { useState } from "react";
 import "./Signinpage.css";
 import illustration from "../../assets/illustration.png";
 import { FaUser, FaLock, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router"
+import { Link } from "react-router"
 
 const Signinpage = () => {
   const [formData, setFormData] = useState({
@@ -71,11 +71,13 @@ const Signinpage = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container flex justify-center items-center">
       {/* LEFT SIDE */}
      
 
       {/* RIGHT SIDE */}
+      <div className=" flex items-center max-w-[1104px] justify-between mx-auto w-[87%]">
+
       <div className="login-right">
         <div className="up">
           <h2 className="logo"><span>Task</span>Flow</h2>
@@ -87,6 +89,8 @@ const Signinpage = () => {
           <p className="subtitle">Login to continue to TaskFlow</p>
 
           {/* EMAIL */}
+          <div className=" mb-5">
+
           <div className="input-group">
             <FaUser />
             <input
@@ -95,11 +99,15 @@ const Signinpage = () => {
               placeholder="Enter Email"
               value={formData.email}
               onChange={handleChange}
+              className=" outline-0 w-full"
             />
           </div>
           {errors.email && <p className="error">{errors.email}</p>}
+          </div>
 
           {/* PASSWORD */}
+          <div className=" mb-5">
+
           <div className="input-group">
             <FaLock />
             <input
@@ -108,6 +116,7 @@ const Signinpage = () => {
               placeholder="Enter Password"
               value={formData.password}
               onChange={handleChange}
+              className=" outline-0 w-full"
             />
             <span
               className="toggle"
@@ -117,6 +126,7 @@ const Signinpage = () => {
             </span>
           </div>
           {errors.password && <p className="error">{errors.password}</p>}
+          </div>
 
           {/* OPTIONS */}
           <div className="options">
@@ -149,6 +159,7 @@ const Signinpage = () => {
       </div>
        <div className="login-left">
         <img src={illustration} alt="Task illustration" />
+      </div>
       </div>
     </div>
   );

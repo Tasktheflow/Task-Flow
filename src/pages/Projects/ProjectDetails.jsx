@@ -6,8 +6,9 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import CreateTaskModal from "../../components/Tasks/CreateTasksModal";
 import { useState } from "react";
+import { DndContext } from "@dnd-kit/core";
+import Board from "../../components/Board/Board";
 
-// ProjectDetails.jsx
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -22,27 +23,58 @@ const ProjectDetails = () => {
     { id: "done", title: "Done", tasks: [] },
   ]);
 
-  const createTask = (title) => ({
-    id: Date.now(),
-    title,
-    description: "",
-    createdAt: new Date().toISOString(),
-  });
 
-  const addTask = (task) => {
-    console.log("Task received:", task);
+ const handleDragEnd = ({ active, over }) => {
+  if (!over) return;
 
-    setBoards((prevBoards) =>
-      prevBoards.map((board) =>
-        board.id === task.status
-          ? {
-              ...board,
-              tasks: [...board.tasks, task],
-            }
-          : board
-      )
-    );
-  };
+  let sourceBoardId = null;
+  let draggedTask = null;
+
+  for (const board of boards) {
+    const found = board.tasks.find((t) => t.id === active.id);
+    if (found) {
+      sourceBoardId = board.id;
+      draggedTask = found;
+      break;
+    }
+  }
+
+  const targetBoardId = over.id;
+
+  if (!draggedTask || sourceBoardId === targetBoardId) return;
+
+  setBoards((prevBoards) =>
+    prevBoards.map((board) => {
+      if (board.id === sourceBoardId) {
+        return {
+          ...board,
+          tasks: board.tasks.filter((t) => t.id !== draggedTask.id),
+        };
+      }
+
+      if (board.id === targetBoardId) {
+        return {
+          ...board,
+          tasks: [...board.tasks, draggedTask],
+        };
+      }
+
+      return board;
+    })
+  );
+};
+
+  
+const addTask = (task) => {
+  setBoards((prevBoards) =>
+    prevBoards.map((board) =>
+      board.id === task.status // status comes from modal dropdown
+        ? { ...board, tasks: [...board.tasks, task] }
+        : board
+    )
+  );
+};
+
 
   const project = projects.find((p) => String(p.id) === projectId);
 
@@ -90,38 +122,13 @@ const ProjectDetails = () => {
         </div>
       </header>
       <div className="p-6">
-        <div className="grid grid-cols-4 gap-4">
-          {boards.map((board) => (
-            <div
-              key={board.id}
-              className="bg-gray-100 rounded-xl p-4 min-h-[300px]"
-            >
-              <h2 className="font-medium mb-4">{board.title}</h2>
-
-              {/* {board.tasks.length === 0 && (
-                <p className="text-sm text-gray-400">No tasks yet</p>
-              )} */}
-
-              {board.tasks.length === 0 ? (
-                <p className="text-sm text-gray-400">No tasks</p>
-              ) : (
-                <div className="space-y-2">
-                  {board.tasks.map((task) => (
-                    <div
-                      key={task.id}
-                      className="bg-white p-3 rounded-lg shadow-sm"
-                    >
-                      <p className="font-medium truncate">{task.title}</p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {new Date(task.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+      <DndContext onDragEnd={handleDragEnd}>
+      <div className="grid grid-cols-4 gap-4">
+        {boards.map((board) => (
+          <Board key={board.id} board={board} />
+        ))}
+      </div>
+    </DndContext>
       </div>
 
       {showTaskModal && (
