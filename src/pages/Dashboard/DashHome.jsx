@@ -199,7 +199,7 @@ const DashHome = () => {
             <p className="text-[15px]/[19px] font-light mb-[26px]">
               Collaborate better by inviting your team
             </p>
-            <button className="w-full bg-[#05A301] text-white py-2 rounded-lg hover:bg-green-600 transition-colors cursor-pointer">
+            <button className="w-full bg-[#05A301] text-white py-2 rounded-lg hover:bg-green-600 transition-colors cursor-pointer"  onClick={() => navigate("/dashboard/projects")}>
               + Invite Team
             </button>
           </div>

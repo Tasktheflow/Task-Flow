@@ -10,16 +10,6 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
   const { addProject, showCreateModal, setShowCreateModal } = useProjects();
   const navigate = useNavigate();
 
-  //   const handleSubmit = () => {
-  //     const newProject = {
-  //       id: Date.now(),
-  //       title: "My New Project",
-  //     };
-
-  //     addProject(newProject);
-  //     onClose();
-  //     navigate("/dashboard/projects");
-  //   };
 
   const [formData, setFormData] = useState({
     title: "",
