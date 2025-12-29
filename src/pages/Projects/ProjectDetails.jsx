@@ -6,15 +6,24 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import CreateTaskModal from "../../components/Tasks/CreateTasksModal";
 import { useState } from "react";
-import { DndContext } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCorners,
+} from "@dnd-kit/core";
 import Board from "../../components/Board/Board";
-
+import InviteMemberModal from "../../components/InviteMembers/InviteMemberModal";
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
   const { projects } = useProjects();
   const navigate = useNavigate();
   const [showTaskModal, setShowTaskModal] = useState(false);
+  const [activeTask, setActiveTask] = useState(null);
+   const [showInviteModal, setShowInviteModal] = useState(false);
 
   const [boards, setBoards] = useState([
     { id: "todo", title: "To-Do", tasks: [] },
@@ -23,58 +32,116 @@ const ProjectDetails = () => {
     { id: "done", title: "Done", tasks: [] },
   ]);
 
-
- const handleDragEnd = ({ active, over }) => {
-  if (!over) return;
-
-  let sourceBoardId = null;
-  let draggedTask = null;
-
-  for (const board of boards) {
-    const found = board.tasks.find((t) => t.id === active.id);
-    if (found) {
-      sourceBoardId = board.id;
-      draggedTask = found;
-      break;
-    }
-  }
-
-  const targetBoardId = over.id;
-
-  if (!draggedTask || sourceBoardId === targetBoardId) return;
-
-  setBoards((prevBoards) =>
-    prevBoards.map((board) => {
-      if (board.id === sourceBoardId) {
-        return {
-          ...board,
-          tasks: board.tasks.filter((t) => t.id !== draggedTask.id),
-        };
-      }
-
-      if (board.id === targetBoardId) {
-        return {
-          ...board,
-          tasks: [...board.tasks, draggedTask],
-        };
-      }
-
-      return board;
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Drag must move 8px to activate
+      },
     })
   );
-};
 
-  
-const addTask = (task) => {
-  setBoards((prevBoards) =>
-    prevBoards.map((board) =>
-      board.id === task.status // status comes from modal dropdown
-        ? { ...board, tasks: [...board.tasks, task] }
-        : board
-    )
-  );
-};
+  const handleDragStart = (event) => {
+    const { active } = event;
 
+    // Find the task being dragged
+    for (const board of boards) {
+      const task = board.tasks.find((t) => t.id === active.id);
+      if (task) {
+        setActiveTask(task);
+        break;
+      }
+    }
+  };
+
+  const handleDragEnd = ({ active, over }) => {
+    setActiveTask(null); // Clear active task
+
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    let sourceBoardId = null;
+    let draggedTask = null;
+    let sourceIndex = -1;
+
+    for (const board of boards) {
+      const foundIndex = board.tasks.findIndex((t) => t.id === activeId);
+      if (foundIndex !== -1) {
+        sourceBoardId = board.id;
+        draggedTask = board.tasks[foundIndex];
+        sourceIndex = foundIndex;
+        break;
+      }
+    }
+
+    if (!draggedTask) return;
+
+    let targetBoardId = null;
+    let targetIndex = -1;
+
+    const boardMatch = boards.find((b) => b.id === overId);
+    if (boardMatch) {
+      targetBoardId = boardMatch.id;
+      targetIndex = boardMatch.tasks.length;
+    } else {
+      for (const board of boards) {
+        const foundIndex = board.tasks.findIndex((t) => t.id === overId);
+        if (foundIndex !== -1) {
+          targetBoardId = board.id;
+          targetIndex = foundIndex;
+          break;
+        }
+      }
+    }
+
+    if (!targetBoardId) return;
+
+    if (sourceBoardId === targetBoardId) {
+      if (sourceIndex === targetIndex) return;
+
+      setBoards((prevBoards) =>
+        prevBoards.map((board) => {
+          if (board.id === sourceBoardId) {
+            const newTasks = [...board.tasks];
+            newTasks.splice(sourceIndex, 1);
+            newTasks.splice(targetIndex, 0, draggedTask);
+            return { ...board, tasks: newTasks };
+          }
+          return board;
+        })
+      );
+    } else {
+      setBoards((prevBoards) =>
+        prevBoards.map((board) => {
+          if (board.id === sourceBoardId) {
+            return {
+              ...board,
+              tasks: board.tasks.filter((t) => t.id !== draggedTask.id),
+            };
+          }
+
+          if (board.id === targetBoardId) {
+            const newTasks = [...board.tasks];
+            newTasks.splice(targetIndex, 0, draggedTask);
+            return { ...board, tasks: newTasks };
+          }
+
+          return board;
+        })
+      );
+    }
+  };
+
+  const addTask = (task) => {
+    setBoards((prevBoards) =>
+      prevBoards.map((board) =>
+        board.id === task.status // status comes from modal dropdown
+          ? { ...board, tasks: [...board.tasks, task] }
+          : board
+      )
+    );
+  };
 
   const project = projects.find((p) => String(p.id) === projectId);
 
@@ -115,26 +182,49 @@ const addTask = (task) => {
             {" "}
             <span className=" text-[16px] ">+</span>Add Task
           </button>
-          <button className=" flex items-center justify-center px-5 py-2.5 bg-transparent border border-[#05A301] text-[#05A301] text-[15px] font-medium rounded-lg gap-[7px] cursor-pointer">
+          <button className=" flex items-center justify-center px-5 py-2.5 bg-transparent border border-[#05A301] text-[#05A301] text-[15px] font-medium rounded-lg gap-[7px] cursor-pointer"   onClick={() => setShowInviteModal(true)} >
             <MdGroupAdd className=" size-[19.5px]" />
             Add Members
           </button>
         </div>
       </header>
       <div className="p-6">
-      <DndContext onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-4 gap-4">
-        {boards.map((board) => (
-          <Board key={board.id} board={board} />
-        ))}
-      </div>
-    </DndContext>
+        <DndContext
+          onDragEnd={handleDragEnd}
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+        >
+          <div className="grid grid-cols-4 gap-4 items-start">
+            {boards.map((board) => (
+              <Board key={board.id} board={board} />
+            ))}
+          </div>
+
+          <DragOverlay>
+            {activeTask ? (
+              <div className="bg-white p-3 rounded-lg shadow-lg cursor-grabbing rotate-3 opacity-90">
+                <p className="font-medium truncate">{activeTask.title}</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {new Date(activeTask.createdAt).toLocaleString()}
+                </p>
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
       </div>
 
       {showTaskModal && (
         <CreateTaskModal
           onClose={() => setShowTaskModal(false)}
           onCreate={addTask}
+        />
+      )}
+
+      {showInviteModal && (
+        <InviteMemberModal
+          onClose={() => setShowInviteModal(false)}
+          projectId={projectId}
         />
       )}
     </motion.div>

@@ -1,18 +1,26 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, boardId }) => {
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
-  } = useSortable({ id: task.id });
+    isDragging,
+  } = useSortable({
+    id: task.id,
+    data: {
+      type: "task",
+      boardId,
+    },
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+      transition: transition || "transform 200ms ease", // Add smooth transition
+    opacity: isDragging ? 0.5 : 1, // Make original semi-transparent while dragging
   };
 
   return (
@@ -21,7 +29,7 @@ const TaskCard = ({ task }) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white p-3 rounded-lg shadow-sm cursor-grab active:cursor-grabbing"
+      className="bg-white p-3 rounded-lg shadow-sm cursor-default active:cursor-grabbing"
     >
       <p className="font-medium truncate">{task.title}</p>
       <p className="text-xs text-gray-400 mt-1">

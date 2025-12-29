@@ -40,6 +40,7 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
 
     onCreate({
       ...form,
+      id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`, // ADD THIS LINE
       createdAt: new Date().toISOString(),
     });
 
