@@ -29,6 +29,11 @@ export const ProjectsProvider = ({ children }) => {
     ]);
   };
 
+  // 🔹 Delete project
+  const deleteProject = (projectId) => {
+    setProjects((prev) => prev.filter((project) => project.id !== projectId));
+  };
+
   return (
     <ProjectsContext.Provider
       value={{
@@ -36,6 +41,7 @@ export const ProjectsProvider = ({ children }) => {
         addProject,
         showCreateModal,
         setShowCreateModal,
+        deleteProject,
       }}
     >
       {children}

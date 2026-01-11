@@ -6,7 +6,7 @@ const InviteMemberModal = ({ onClose, projectId }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [sendSuccess, setSendSuccess] = useState(false);
 
-  // Generate project link (adjust based on your actual URL structure)
+  // Generate project link 
   const projectLink = `${window.location.origin}/project/${projectId}`;
 
   const handleSendInvite = (e) => {
@@ -24,8 +24,8 @@ const InviteMemberModal = ({ onClose, projectId }) => {
       return;
     }
 
-    // Here you would typically make an API call to send the invitation
-    // For now, we'll just simulate it
+    // Here i would make an API call to send the invitation
+    // For now,i just simulate it
     console.log("Sending invite to:", email);
     console.log("Project link:", projectLink);
 
@@ -36,7 +36,7 @@ const InviteMemberModal = ({ onClose, projectId }) => {
       setEmail("");
     }, 2000);
 
-    // In a real implementation, you would do something like:
+    // In a real implementation:
     // await fetch('/api/send-invite', {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },
