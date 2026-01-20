@@ -1,13 +1,7 @@
-import React from 'react'
-import DragTest from '../../components/Testdnd/DND'
-
+import React from "react";
 
 const Inbox = () => {
-  return (
-    <div>Inbox
-    <DragTest/>
-    </div>
-  )
-}
+  return <div>Inbox</div>;
+};
 
-export default Inbox
+export default Inbox;
