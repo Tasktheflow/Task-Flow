@@ -13,10 +13,10 @@ const Landingpage = () => {
       <Header/>
       <Landingpagecont1/>
       <Landingpagecont2/>
-      <Landingpagecont3/>
-      <Landingpagecont4/>
+       {/* <Landingpagecont3/> */}
+       <Landingpagecont4/>
       <Landingpagecont5/>
-      <Footer/>
+      <Footer/>   
     </div>
   )
 }

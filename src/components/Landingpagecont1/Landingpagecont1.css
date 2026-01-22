@@ -6,9 +6,7 @@
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;
-    /* margin-top: 113px; */
-    /* padding-left: 40px;
-    padding-right: 41px; */
+    
 
 }
 
@@ -17,13 +15,11 @@
     gap: 48px;
     max-width: 1359px;
     width: 100%;
-    margin-top: 113px;
-
-
-    /* align-items: center; */
-    margin-right: 41px;
-    margin-left: 41px;
-    margin-bottom: 75px;
+    overflow: hidden;
+    margin: 113px 41px 75px;
+   
+   
+    
 
 
 }
@@ -33,7 +29,8 @@
     width: 100%;
     padding-top: 27px;
     padding-bottom: 27px;
-    flex: 1;
+   
+    
 }
 
 .simple-cont1 {
@@ -41,11 +38,9 @@
     gap: 10px;
     background: rgba(193, 255, 196, 0.5);
     max-width: 230px;
-    /* align-items: center; */
     border-radius: 16px;
-    /* margin-top: 27px; */
     margin-bottom: 40px;
-
+    
 
 }
 
@@ -131,15 +126,25 @@
 
 
 .img-cont1 {
-    display: flex;
-    justify-content: center;
-
+    /* display: flex;
+    justify-content: center; */
+    /* flex: 1; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+  
+ 
 }
+
+
+
 
 .img-cont1 img {
     width: 100%;
     height: auto;
     display: block;
+    object-fit: contain;
     max-width: 537px;
 
 }
@@ -189,4 +194,77 @@
 
 .rating-cont1 {
     width: 89px;
+}
+
+/* responsiveness */
+
+/* section 2 */
+/* From 1420px downwards */
+@media (max-width: 1420px) {
+  .section2-cont1 {
+    padding-inline: 180px; 
+  }
+}
+
+/* From 1200px downwards */
+@media (max-width: 1200px) {
+  .section2-cont1 {
+    padding-inline: 120px;
+  }
+
+  .users-cont1 h4 {
+    font-size: 15px; 
+  }
+}
+
+/* From 1024px downwards */
+@media (max-width: 1024px) {
+  .section2-cont1 {
+    padding-inline: 80px;
+  }
+
+  .users-cont1 {
+    justify-content: center;
+    gap: 32px; 
+    flex-wrap: wrap; 
+  }
+
+  .users-cont1 h4 {
+    font-size: 15px;
+  }
+}
+
+/* From 900px downwards  */
+@media (max-width: 900px) {
+  .users-cont1 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .users-cont1 h4 {
+    font-size: 14px;
+  }
+}
+
+/* From 768px downwards */
+@media (max-width: 768px) {
+  .section2-cont1 {
+    padding-inline: 40px;
+    padding-block: 40px;
+  }
+
+  .users-cont1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .users-cont1 h4 {
+    font-size: 14px;
+    text-align: center;
+  }
 }

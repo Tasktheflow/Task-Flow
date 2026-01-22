@@ -88,3 +88,143 @@ color: rgba(0, 0, 0, 1);
 text-align: start;
 
 }
+
+/* responsiveness */
+/* From 1420px downwards */
+@media (max-width: 1420px) {
+  .Landingpagecont4 {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .features-cont4 {
+    gap: 40px;
+  }
+
+  .cards-cont4 {
+    max-width: 380px;
+  }
+
+  .cards-cont4 h5,
+  .circle-cont4 h6 {
+    font-size: 15px;
+  }
+}
+
+/* From 1200px downwards */
+@media (max-width: 1200px) {
+  .Landingpagecont4 {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .features-cont4 {
+    gap: 32px;
+  }
+
+  .cards-cont4 {
+    max-width: 340px;  
+    padding: 12px;
+  }
+
+  .cards-cont4 h5 {
+    font-size: 15px;    
+    max-width: 320px;
+  }
+
+  .circle-cont4 h6 {
+    font-size: 14px;
+    max-width: 260px;
+  }
+}
+
+/* From 1024px downwards */
+@media (max-width: 1024px) {
+  .Landingpagecont4 {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .features-cont4 {
+    gap: 24px;
+  }
+
+  .cards-cont4 {
+    max-width: 300px;   
+    padding: 10px;
+  }
+
+  .cards-cont4 h5 {
+    font-size: 14px;
+    max-width: 280px;
+  }
+
+  .circle-cont4 {
+    width: 100%;
+    gap: 16px;
+  }
+
+  .circle-cont4 h6 {
+    font-size: 13px;
+    max-width: 240px;
+  }
+}
+
+/* From 900px downwards ( 2-column grid) */
+@media (max-width: 900px) {
+  .features-cont4 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    justify-items: center;
+  }
+
+  .cards-cont4 {
+    max-width: 100%;
+  }
+
+  .cards-cont4 h5 {
+    font-size: 14px;
+  }
+
+  .circle-cont4 h6 {
+    font-size: 13px;
+  }
+}
+
+/* From 768px downwards  */
+@media (max-width: 768px) {
+  .Landingpagecont4 {
+    padding: 40px 20px;
+  }
+
+  .features-cont4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .cards-cont4 {
+    max-width: 100%;
+    width: 100%;
+    padding: 12px;
+  }
+
+  .cards-cont4 h5 {
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .circle-cont4 {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .circle-cont4 h6 {
+    font-size: 13px;
+    text-align: center;
+  }
+}
