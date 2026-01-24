@@ -12,6 +12,7 @@
     padding-right: 41px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 
@@ -98,13 +99,30 @@ color: rgba(0, 0, 0, 1);
 
 /* responsiveness */
 @media (max-width: 768px) {
+
+.navbar{
+  padding: 20px;
+}
+
   .hamburger {
     display: flex;
   }
 
+  .hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
   .navlinks {
     position: absolute;
-    top: 80px;
+    top: 60px;
     right: 0;
     background: white;
     flex-direction: column;
@@ -114,6 +132,7 @@ color: rgba(0, 0, 0, 1);
     gap: 20px;
     display: none;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    height: 100vh;
   }
 .navlinks.active {
     display: flex;

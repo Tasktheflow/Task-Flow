@@ -225,8 +225,9 @@ margin-left: 102px;
   }
 
   .text-foot {
-    margin: 40px 20px -20px;
+  margin: 40px 20px -20px;
     text-align: center;
+    /* align-items: center; */
     max-width: 100%;
   }
 

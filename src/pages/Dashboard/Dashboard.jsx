@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   return (
    
-     <div className=" h-screen flex flex-col">
+     <div className=" h-screen flex flex-col max-w-[2000px] mx-auto">
       <div className=" sticky top-0 z-10">
         <DashHeader />
       </div>
@@ -24,13 +24,13 @@ const Dashboard = () => {
   {/* sidebar Navigation */}
 
       <div className=" flex flex-1 overflow-hidden">
-        <aside className=" w-[326px] px-[17px] py-10 flex flex-col justify-between">
+        <aside className=" w-[326px] px-[17px] py-10 flex flex-col justify-between max-[1390px]:w-[250px] max-[1320px]:w-[200px]">
           <div className=" flex flex-col gap-3">
             <NavLink
               to="/dashboard"
               end
               className={({ isActive }) =>
-                `rounded-2xl flex items-center gap-[21px] pl-[25px] py-[17.5px] transition
+                `rounded-2xl flex items-center gap-[21px] pl-[25px] max-[1320px]:gap-[19px]  py-[17.5px] transition 
      ${
        isActive ? "bg-[#05A301] text-white" : "text-[#05A301] hover:bg-green-50"
      }`

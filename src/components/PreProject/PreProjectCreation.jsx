@@ -145,7 +145,7 @@ const PreProjectCreation = () => {
           {" "}
           Quick Start Guide
         </h4>
-        <div className="flex w-full justify-between mb-8">
+        <div className="flex w-full justify-between mb-8 max-w-[1200px] mx-auto">
           <div className="bg-[#CCEDEF]  rounded-2xl p-[35px] relative w-[309px]">
             <div className="absolute top-4 right-4 size-[31px] bg-white rounded-full flex items-center justify-center text-sm font-semibold shadow-[0px_1px_4px_0px_#00000040]">
               1

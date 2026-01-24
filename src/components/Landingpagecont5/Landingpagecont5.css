@@ -47,6 +47,7 @@ color: rgba(0, 0, 0, 1);
   gap: 4px;
   padding: 16px;
   align-items: center;
+  justify-content: center;
   max-width: 172px;
   text-decoration: none;
   color: rgba(255, 255, 255, 1);
@@ -59,7 +60,7 @@ transition: background-color 0.25s ease;
 }
 
 .btns-cont5:hover{
-    background-color: aqua;
+    background-color:rgba(7, 48, 7, 0.9);
 }
 
 .arrow-icon5{
@@ -87,7 +88,7 @@ color: rgba(5, 163, 1, 1);
 
 }
 .btn2-cont5:hover{
-    background-color: aqua;
+    background-color:rgba(7, 48, 7, 0.9);
 }
 
 /* responsiveness */
