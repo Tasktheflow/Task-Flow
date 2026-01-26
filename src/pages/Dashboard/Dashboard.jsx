@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import DashHeader from "../../components/DashHeader/DashHeader";
 import { Link, Outlet } from "react-router";
 import { NavLink } from "react-router-dom";
@@ -12,19 +12,38 @@ import { Users } from "lucide-react";
 import ScrollToTopContainer from "../../components/ScrollToTopContainer";
 
 const Dashboard = () => {
-  
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-   
-     <div className=" h-screen flex flex-col max-w-[2000px] mx-auto">
+    <div className=" h-screen flex flex-col max-w-[2000px] mx-auto">
       <div className=" sticky top-0 z-10">
-        <DashHeader />
+        <DashHeader setSidebarOpen={setSidebarOpen} />
       </div>
 
-  {/* sidebar Navigation */}
+      {/* sidebar Navigation */}
 
       <div className=" flex flex-1 overflow-hidden">
-        <aside className=" w-[326px] px-[17px] py-10 flex flex-col justify-between max-[1390px]:w-[250px] max-[1320px]:w-[200px]">
+        {sidebarOpen && (
+          <div
+            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-black/30 z-40 max-[1250px]:block hidden"
+          />
+        )}
+        <aside
+          className={`
+    w-[326px] px-[17px] py-10 flex flex-col justify-between
+    max-[1390px]:w-[250px] max-[1320px]:w-[200px]
+
+    transition-transform duration-300
+
+    max-[1250px]:fixed max-[1250px]:top-0 max-[1250px]:left-0 
+    max-[1250px]:h-screen max-[1250px]:z-50 max-[1250px]:bg-white
+    max-[1250px]:pt-24
+
+    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+  min-[1250px]:translate-x-0
+  `}
+        >
           <div className=" flex flex-col gap-3">
             <NavLink
               to="/dashboard"
@@ -126,14 +145,13 @@ const Dashboard = () => {
           </div>
         </aside>
 
-{/* Different pages showcase */}
+        {/* Different pages showcase */}
 
-        <div  id="dashboard-scroll" className="  flex-1 overflow-y-auto">
+        <div id="dashboard-scroll" className="  flex-1 overflow-y-auto">
           <div className="w-full ">
-            <ScrollToTopContainer/>
+            <ScrollToTopContainer />
             <Outlet />
           </div>
-         
         </div>
       </div>
     </div>

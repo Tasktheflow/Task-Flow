@@ -5,9 +5,11 @@ import { LuUserPen } from "react-icons/lu";
 import { FaEnvelope } from "react-icons/fa";
 import { MdLock } from "react-icons/md";
 import { CiLock } from "react-icons/ci";
-import{ useNavigate } from "react-router-dom"
-import { Link} from "react-router-dom"
-
+import { useNavigate } from "react-router";
+import { Link } from "react-router";
+import { registerUser } from "../../services/authService";
+import { toast } from "react-toastify";
+import LoadingButton from "../../components/loadingButton/LoadingButton";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +23,7 @@ const SignupPage = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -73,115 +76,145 @@ const SignupPage = () => {
   };
 
   // Submit handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (validate()) {
-      console.log("Signup successful:", formData);
-      alert("Account created successfully ✅");
-      navigate ("/dashboard")
-    } else {
-      alert("Please fix the errors ❌");
+    const isValid = validate();
+    if (!isValid) return;
+
+    setLoading(true);
+
+    try {
+      const res = await registerUser(formData);
+
+      if (res.success) {
+        toast.success(res.message);
+      } else {
+        toast.error(res.message);
+      }
+
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-    
   };
 
   return (
-    <div className="signup-container">
-      <div className="Left-div">
-        <img src={alt} alt="illustration" />
-      </div>
+    <div className="signup-container flex items-center justify-center">
+      <div className=" flex">
+        <div className="Left-div">
+          <img src={alt} alt="illustration" />
+        </div>
 
-      <div className="Right-div">
-        <h2 className="right-h2">
-          <span className="h2-span">Task</span>Flow
-        </h2>
-        <p className="right-p">Simple task management for teams</p>
+        <div className="Right-div">
+          <h2 className="right-h2">
+            <span className="h2-span">Task</span>Flow
+          </h2>
+          <p className="right-p">Simple task management for teams</p>
 
-        <form onSubmit={handleSubmit} className="signup-form">
-          <h3 className="signup-h3">Create an Account</h3>
-          <p className="signup-p">Sign up to continue to TaskFlow</p>
+          <form onSubmit={handleSubmit} className="signup-form">
+            <h3 className="signup-h3">Create an Account</h3>
+            <p className="signup-p">Sign up to continue to TaskFlow</p>
 
-          {/* Username */}
-          <div className="form-div">
-            <span><LuUserPen /></span>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter Username"
-              value={formData.username}
-              onChange={handleChange}
+            {/* Username */}
+            <div className="form-div">
+              <span>
+                <LuUserPen />
+              </span>
+              <input
+                type="text"
+                name="username"
+                placeholder="Enter Username"
+                value={formData.username}
+                onChange={handleChange}
+              />
+            </div>
+            {errors.username && <p className="error">{errors.username}</p>}
+
+            {/* Email */}
+            <div className="form-div">
+              <span>
+                <FaEnvelope />
+              </span>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter Email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            {errors.email && <p className="error">{errors.email}</p>}
+
+            {/* Password */}
+            <div className="form-div">
+              <span>
+                <MdLock />
+              </span>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter Password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <span
+                className="show-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {/* {showPassword ? "Hide" : "Show"} */}
+              </span>
+            </div>
+            {errors.password && <p className="error">{errors.password}</p>}
+
+            {/* Confirm Password */}
+            <div className="form-div">
+              <span>
+                <CiLock />
+              </span>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
+            </div>
+            {errors.confirmPassword && (
+              <p className="error">{errors.confirmPassword}</p>
+            )}
+
+            {/* Checkbox */}
+            <div className="checkbox-div">
+              <input
+                type="checkbox"
+                name="agree"
+                checked={formData.agree}
+                onChange={handleChange}
+              />
+              <label>I agree to all terms</label>
+            </div>
+            {errors.agree && <p className="error">{errors.agree}</p>}
+
+            <LoadingButton
+              loading={loading}
+              text="Register"
+              loadingText="Creating account..."
+              className="register-btn"
+              type="submit"
             />
-          </div>
-          {errors.username && <p className="error">{errors.username}</p>}
 
-          {/* Email */}
-          <div className="form-div">
-            <span><FaEnvelope /></span>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter Email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          {errors.email && <p className="error">{errors.email}</p>}
-
-          {/* Password */}
-          <div className="form-div">
-            <span><MdLock /></span>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Enter Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            <span
-              className="show-password"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {/* {showPassword ? "Hide" : "Show"} */}
-            </span>
-          </div>
-          {errors.password && <p className="error">{errors.password}</p>}
-
-          {/* Confirm Password */}
-          <div className="form-div">
-            <span><CiLock /></span>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-          </div>
-          {errors.confirmPassword && (
-            <p className="error">{errors.confirmPassword}</p>
-          )}
-
-          {/* Checkbox */}
-          <div className="checkbox-div">
-            <input
-              type="checkbox"
-              name="agree"
-              checked={formData.agree}
-              onChange={handleChange}
-            />
-            <label>I agree to all terms</label>
-          </div>
-          {errors.agree && <p className="error">{errors.agree}</p>}
-
-          <button className="register-btn" type="submit">
-            Register
-          </button>
-
-          <p className="last-p">
-            Already have an account? <span> <Link to="/Signin">Log in</Link></span>
-          </p>
-        </form>
+            <p className="last-p">
+              Already have an account?{" "}
+              <span>
+                {" "}
+                <Link to="/Signin">Log in</Link>
+              </span>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
