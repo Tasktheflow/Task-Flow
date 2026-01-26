@@ -1,7 +1,7 @@
 import React from 'react'
 import "./Landingpagecont5.css"
 import { Link } from 'react-router'
-import Right2 from "../../assets/ep_right (1).png"
+import Right2 from "../../assets/Vector (22).png"
 
 const Landingpagecont5 = () => {
   return (

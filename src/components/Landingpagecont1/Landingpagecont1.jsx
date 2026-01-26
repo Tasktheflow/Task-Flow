@@ -2,13 +2,13 @@ import React from "react";
 import { Link } from "react-router";
 import "./Landingpagecont1.css";
 import Thunder from "../../assets/akar-icons_thunder.png";
-import Right from "../../assets/ep_right.png";
-import Istock from "../../assets/Frame 137.png";
+import Right from "../../assets/ep_right (2).png";
+import Istock from "../../assets/Frame 137 (2).png";
 
 const Landingpagecont1 = () => {
   return (
       <div className="Landingpagecont1">
-        {/* <div className="flex-cont1">
+         <div className="flex-cont1">
           <div className="smart-cont1">
             <div className="simple-cont1">
               <img src={Thunder} alt="logo" className="" />
@@ -20,17 +20,18 @@ const Landingpagecont1 = () => {
               drive your business forward effortlessly
             </p>
 
-             <div className=''> 
-                            <Link to="/Signup" className='Get-cont1'>
-                            <p> Get Started </p>
-                            <img src={Right} alt="logo" className="arrow-icon1" />
-                            </Link>
-                        </div>
+             
+                <Link to="/Signup" className='Get-cont1'>
+                     <p> Get Started </p>
+                      <img src={Right} alt="logo" className="arrow-icon1" />
+                      </Link>
+                      
           </div>
+
           <div className="img-cont1">
             <img src={Istock} alt="logo" className="" />
           </div>
-        </div> */}
+        </div> 
 
       {/* section 2 */}
       <div className="section2-cont1">

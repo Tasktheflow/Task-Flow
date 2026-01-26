@@ -3,7 +3,7 @@ import "./Landingpagecont4.css";
 import Star1 from "../../assets/Frame 159.png";
 import Star2 from "../../assets/Frame 159 (1).png"
 import Star3 from "../../assets/Frame 159 (4).png"
-import Circle from "../../assets/Ellipse 15.png";
+import Circle from "../../assets/Ellipse 15 (1).png";
 
 const Landingpagecont4 = () => {
   return (
