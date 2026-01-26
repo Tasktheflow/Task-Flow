@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { LuRocket } from "react-icons/lu";
 import { Users, CheckSquare, Mail } from "lucide-react";
 import { IoMdCalendar } from "react-icons/io";
@@ -7,20 +7,15 @@ import { useState } from "react";
 
 import { AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { useProjects } from '../Contexts/ProjectsContext';
-import CreateProjectModal from '../Projectcreation/CreateProject';
+import { useProjects } from "../Contexts/ProjectsContext";
+import CreateProjectModal from "../Projectcreation/CreateProject";
 
 const PreProjectCreation = () => {
-
- const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const navigate = useNavigate();
 
-
-
   const { addProject } = useProjects();
-
-
 
   const [formData, setFormData] = useState({
     title: "",
@@ -31,6 +26,8 @@ const PreProjectCreation = () => {
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
+
 
   const colors = [
     "#10B981", // green
@@ -84,23 +81,23 @@ const PreProjectCreation = () => {
 
   const handleSubmit = () => {
     if (validateForm()) {
-    addProject({
-      id: Date.now(),
-      ...formData,
-    });
+      addProject({
+        id: Date.now(),
+        ...formData,
+      });
 
-    // 2. Mark form submitted
-    setSubmitted(true);
+      // 2. Mark form submitted
+      setSubmitted(true);
 
-    // 3. Optionally log
-    console.log("Project Data:", formData);
+      // 3. Optionally log
+      console.log("Project Data:", formData);
 
-    // 4. Close modal (if you have a state for modal)
-    setShowCreateModal(false);
+      // 4. Close modal (if you have a state for modal)
+      setShowCreateModal(false);
 
-    // 5. Navigate to Projects page
-    navigate("/dashboard/projects");
-  }
+      // 5. Navigate to Projects page
+      navigate("/dashboard/projects");
+    }
   };
 
   const handleCancel = () => {
@@ -124,17 +121,17 @@ const PreProjectCreation = () => {
   };
 
   return (
-      <div>
+    <div>
       {/* introduction to TaskFlow */}
 
-      <div className=" w-full flex flex-col gap-5 font-['inter'] bg-[url('/src/assets/dashbg.png')] p-[50px]">
+      <div className=" w-full flex flex-col gap-5 font-['inter'] bg-[url('/src/assets/dashbg.png')] p-[50px] max-[700px]:p-5 max-[400px]:p-2">
         <div className=" size-12.5 bg-[#05A301] rounded-lg flex items-center justify-center shadow-[0px_4px_4px_0px_#00000040] place-self-center">
           <LuRocket size={22.75} color="white" />
         </div>
-        <h2 className=' text-center font-["inter"] text-[24px] font-medium '>
-          Welcome to TaskFlow, Ada! 🎉
+        <h2 className=' text-center font-["inter"] text-[24px] font-medium max-[500px]:text-[18px]'>
+          Welcome to TaskFlow, {user?.username}! 🎉
         </h2>
-        <p className='w-full  font-["inter"] text-[24px]/[34px] text-center font-light max-w-[859px] place-self-center'>
+        <p className='w-full  font-["inter"] text-[24px]/[34px] text-center font-light max-w-[859px] place-self-center  max-[500px]:text-[18px]'>
           You're all set! Let's get you started with your first project or task.
           TaskFlow helps you stay organized and get work done efficiently.
         </p>
@@ -145,12 +142,22 @@ const PreProjectCreation = () => {
           {" "}
           Quick Start Guide
         </h4>
-        <div className="flex w-full justify-between mb-8">
-          <div className="bg-[#CCEDEF]  rounded-2xl p-[35px] relative w-[309px]">
+        <div
+          className="  grid 
+    grid-cols-3 
+       max-[1070px]:grid-cols-2 
+       max-[712px]:grid-cols-1 
+    gap-6 
+    mb-8 
+    max-w-[1200px] 
+    mx-auto
+    max-[706px]:w-[90%]"
+        >
+          <div className="bg-[#CCEDEF]  rounded-2xl p-[35px] relative w-[309px] max-[706px]:w-full">
             <div className="absolute top-4 right-4 size-[31px] bg-white rounded-full flex items-center justify-center text-sm font-semibold shadow-[0px_1px_4px_0px_#00000040]">
               1
             </div>
-            <div className="size-8 bg-[#0251BA] rounded-lg flex items-center justify-center mb-4 shadow-[0px_1px_4px_0px_#00000040]">
+            <div className="size-8 bg-[#0251BA] rounded-lg flex items-center justify-center mb-4 shadow-[0px_1px_4px_0px_#00000040] ">
               <svg
                 width="16"
                 height="16"
@@ -179,12 +186,14 @@ const PreProjectCreation = () => {
             {/* Create Project */}
             <AnimatePresence>
               {showCreateModal && (
-               <CreateProjectModal closeModal={() => setShowCreateModal(false)}/>
+                <CreateProjectModal
+                  closeModal={() => setShowCreateModal(false)}
+                />
               )}
             </AnimatePresence>
           </div>
 
-          <div className="bg-[#C4F2C3] rounded-2xl p-[35px] relative w-[309px]">
+          <div className="bg-[#C4F2C3] rounded-2xl p-[35px] relative w-[309px] max-[706px]:w-full">
             <div className="absolute top-4 right-4 size-[31px] bg-white rounded-full flex items-center justify-center text-sm font-semibold shadow-[0px_1px_4px_0px_#00000040]">
               2
             </div>
@@ -197,12 +206,15 @@ const PreProjectCreation = () => {
             <p className="text-[15px]/[19px] font-light mb-[26px]">
               Collaborate better by inviting your team
             </p>
-            <button className="w-full bg-[#05A301] text-white py-2 rounded-lg hover:bg-green-600 transition-colors cursor-pointer"  onClick={() => navigate("/dashboard/projects")}>
+            <button
+              className="w-full bg-[#05A301] text-white py-2 rounded-lg hover:bg-green-600 transition-colors cursor-pointer"
+              onClick={() => navigate("/dashboard/projects")}
+            >
               + Invite Team
             </button>
           </div>
 
-          <div className="bg-[#E2C3F7] rounded-2xl p-[35px] relative w-[309px]">
+          <div className="bg-[#E2C3F7] rounded-2xl p-[35px] relative w-[309px] max-[706px]:w-full">
             <div className="absolute top-4 right-4 size-[31px] bg-white rounded-full flex items-center justify-center text-sm font-semibold shadow-[0px_1px_4px_0px_#00000040]">
               3
             </div>
@@ -215,7 +227,10 @@ const PreProjectCreation = () => {
             <p className="text-[15px]/[19px] font-light mb-[26px] W-[247px]">
               Start tracking your work by adding a task
             </p>
-            <button className="w-full bg-[#7600CA] text-white py-2 rounded-lg hover:bg-purple-600 transition-colors cursor-pointer"  onClick={() => navigate("/dashboard/projects")}>
+            <button
+              className="w-full bg-[#7600CA] text-white py-2 rounded-lg hover:bg-purple-600 transition-colors cursor-pointer"
+              onClick={() => navigate("/dashboard/projects")}
+            >
               + Create Task
             </button>
           </div>
@@ -231,7 +246,7 @@ const PreProjectCreation = () => {
             Everything you need for simple yet structured task management
           </p>
 
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-4 gap-6 max-[950px]:grid-cols-2 max-[580px]:grid-cols-1">
             <div className="text-center">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <IoMdCheckboxOutline className="text-green-600" size={16} />
@@ -275,7 +290,7 @@ const PreProjectCreation = () => {
         {/* Explore Taskflow */}
 
         <div className=" pt-[27px] pb-8 w-full  bg-white border border-[#A1A3AB80] shadow-[0px_1px_4px_0px_#00000040] rounded-2xl">
-          <div className=" flex flex-col gap-5">
+          <div className=" flex flex-col gap-5 max-[900px]:px-4">
             <div className=" px-[11px] py-[9.5px] bg-[#05A301] place-self-center flex items-center justify-between rounded-[5px]">
               <span className="material-symbols-outlined size-6 text-white ">
                 star_shine
@@ -285,17 +300,23 @@ const PreProjectCreation = () => {
               <h2 className=" text-[20px] font-medium text-center mb-2.5">
                 Want to Explore First?
               </h2>
-              <p className=" font-light text-[16px] text-center w-[570px]">
+              <p className=" font-light text-[16px] text-center w-[570px] max-[900px]:w-full">
                 You're currently viewing a clean dashboard. In the demo version,
                 sample projects and tasks would appear here to help you explore
                 TaskFlow's features.
               </p>
             </div>
-            <div className=" text-[15px] font-medium flex gap-[42px] place-self-center">
-              <button className=" text-white bg-[#05A301] px-[26.5px] py-2.5 rounded-lg shadow-[0px_1px_4px_0px_#00000040] cursor-pointer" onClick={() => setShowCreateModal(true)}>
+            <div className=" text-[15px] font-medium flex gap-[42px] place-self-center max-[670px]:flex-col max-[670px]:gap-2.5 max-[380px]:w-full">
+              <button
+                className=" text-white bg-[#05A301] px-[26.5px] py-2.5 rounded-lg shadow-[0px_1px_4px_0px_#00000040] cursor-pointer max-[380px]:w-[95%] max-[305px]:text-[14px]"
+                onClick={() => setShowCreateModal(true)}
+              >
                 + Create Your First Project
               </button>
-              <button className=" py-2.5 w-[247px] rounded-lg shadow-[0px_1px_4px_0px_#00000040] border border-[#05A301] text-[#05A301] cursor-pointer" onClick={() => navigate("/dashboard/projects")}>
+              <button
+                className=" py-2.5 w-[247px] rounded-lg shadow-[0px_1px_4px_0px_#00000040] border border-[#05A301] text-[#05A301] cursor-pointer max-[380px]:w-[95%] max-[305px]:text-[14px]"
+                onClick={() => navigate("/dashboard/projects")}
+              >
                 + Add A Task
               </button>
             </div>
@@ -306,34 +327,34 @@ const PreProjectCreation = () => {
       {/* tips section */}
 
       <div className=" w-full bg-white pt-[81px] pb-[69px] ">
-        <div className=" flex justify-evenly">
-          <div className=" px-[23px] pt-[17px] pb-[26px] flex gap-[11px] border border-[#74747480] rounded-2xl">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto">
+        <div className=" flex justify-evenly max-[980px]:flex-col max-[980px]:w-[60%] max-[980px]:mx-auto max-[980px]:gap-4">
+          <div className=" px-[23px] pt-[17px] pb-[26px] flex gap-[11px] border border-[#74747480] rounded-2xl max-[360px]:flex-col">
+            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center ">
               <IoMdCheckboxOutline className="text-green-600" size={16} />
             </div>
-            <div className=" text-[12px] font-['inter'] w-[201px]">
+            <div className=" text-[12px] font-['inter'] w-[201px] max-[980px]:w-full">
               <h4 className=" mb-2">Pro Tip</h4>
               <p>
                 Use keyboard shortcuts: Press 'C' to create a new task quickly
               </p>
             </div>
           </div>
-          <div className=" px-[23px] pt-[17px] pb-[26px] flex gap-[11px] border border-[#74747480] rounded-2xl">
-            <div className="w-12 h-12 bg-[#C8EAFB80] rounded-lg flex items-center justify-center mx-auto">
+          <div className=" px-[23px] pt-[17px] pb-[26px] flex gap-[11px] border border-[#74747480] rounded-2xl max-[360px]:flex-col">
+            <div className="w-12 h-12 bg-[#C8EAFB80] rounded-lg flex items-center justify-center">
               <IoMdCalendar className="text-[#0225FF]" size={16} />
             </div>
-            <div className=" text-[12px] font-['inter'] w-[201px]">
+            <div className=" text-[12px] font-['inter'] w-[201px] max-[980px]:w-full">
               <h4 className=" mb-2">Stay Organized</h4>
               <p>
                 Set due dates and priorities to manage your workload effectively
               </p>
             </div>
           </div>
-          <div className=" px-[23px] pt-[17px] pb-[26px] flex gap-[11px] border border-[#74747480] rounded-2xl">
-            <div className="w-12 h-12 bg-[#E2C3F780] rounded-lg flex items-center justify-center mx-auto">
+          <div className=" px-[23px] pt-[17px] pb-[26px] flex gap-[11px] border border-[#74747480] rounded-2xl max-[360px]:flex-col">
+            <div className="w-12 h-12 bg-[#E2C3F780] rounded-lg flex items-center justify-center">
               <Users className="text-[#A845EF]" size={16} />
             </div>
-            <div className=" text-[12px] font-['inter'] w-[201px]">
+            <div className=" text-[12px] font-['inter'] w-[201px] max-[980px]:w-full">
               <h4 className=" mb-2">Collaborate</h4>
               <p>
                 Invite team members to projects and assign tasks to stay in sync
@@ -343,7 +364,7 @@ const PreProjectCreation = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PreProjectCreation
+export default PreProjectCreation;

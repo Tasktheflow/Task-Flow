@@ -47,6 +47,7 @@ color: rgba(0, 0, 0, 1);
   gap: 4px;
   padding: 16px;
   align-items: center;
+  justify-content: center;
   max-width: 172px;
   text-decoration: none;
   color: rgba(255, 255, 255, 1);
@@ -59,7 +60,7 @@ transition: background-color 0.25s ease;
 }
 
 .btns-cont5:hover{
-    background-color: aqua;
+    background-color:rgba(7, 48, 7, 0.9);
 }
 
 .arrow-icon5{
@@ -87,5 +88,142 @@ color: rgba(5, 163, 1, 1);
 
 }
 .btn2-cont5:hover{
-    background-color: aqua;
+    background-color:rgba(7, 48, 7, 0.9);
+}
+
+/* responsiveness */
+
+/* From 1420px downwards */
+@media (max-width: 1420px) {
+  .Landingpagecont5 {
+    padding-left: 300px;
+    padding-right: 300px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+  }
+
+  .Landingpagecont5 h5,
+  .Landingpagecont5 h6 {
+    font-size: 15px;
+  }
+
+  .btns-cont5,
+  .btn2-cont5 {
+    font-size: 19px;
+    padding: 14px;
+  }
+  .btn1-cont5 {
+    margin-inline: 100px;
+    gap: 28px;
+    justify-content: center;
+  }
+}
+
+/* From 1200px downwards */
+@media (max-width: 1200px) {
+  .Landingpagecont5 {
+    padding-left: 200px;
+    padding-right: 200px;
+    padding-top: 90px;
+    padding-bottom: 90px;
+  }
+
+  .Landingpagecont5 h5,
+  .Landingpagecont5 h6 {
+    font-size: 15px;
+  }
+
+  .btn1-cont5 {
+    margin-inline: 100px;
+    gap: 28px;
+     justify-content: center;
+  }
+
+  .btns-cont5,
+  .btn2-cont5 {
+    font-size: 18px;
+    padding: 12px;
+  }
+}
+
+/* From 1024px downwards */
+@media (max-width: 1024px) {
+  .Landingpagecont5 {
+    padding-left: 120px;
+    padding-right: 120px;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  .Landingpagecont5 h5,
+  .Landingpagecont5 h6 {
+    font-size: 14px;
+  }
+
+  .btn1-cont5 {
+    margin-inline: 60px;
+    gap: 24px;
+    justify-content: center;
+  }
+
+  .btns-cont5,
+  .btn2-cont5 {
+    font-size: 17px;
+    padding: 12px;
+  }
+  
+}
+
+/* From 900px downwards (center buttons) */
+@media (max-width: 900px) {
+  .Landingpagecont5 {
+    padding-left: 60px;
+    padding-right: 60px;
+    padding-top: 70px;
+    padding-bottom: 70px;
+  }
+
+  .Landingpagecont5 h5,
+  .Landingpagecont5 h6 {
+    font-size: 14px;
+  }
+
+  .btn1-cont5 {
+    margin-inline: 0;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .btns-cont5,
+  .btn2-cont5 {
+    font-size: 16px;
+    padding: 10px;
+  }
+}
+
+/* From 768px downwards  */
+@media (max-width: 768px) {
+  .Landingpagecont5 {
+    padding: 60px 20px;
+  }
+
+  .Landingpagecont5 h5,
+  .Landingpagecont5 h6 {
+    font-size: 13px;
+  }
+
+  .btn1-cont5 {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-inline: 0;
+  }
+
+  .btns-cont5,
+  .btn2-cont5 {
+    font-size: 15px;
+    width: 100%;
+    max-width: 240px;
+    text-align: center;
+  }
 }

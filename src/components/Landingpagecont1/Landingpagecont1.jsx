@@ -8,7 +8,7 @@ import Istock from "../../assets/Frame 137.png";
 const Landingpagecont1 = () => {
   return (
       <div className="Landingpagecont1">
-        <div className="flex-cont1">
+        {/* <div className="flex-cont1">
           <div className="smart-cont1">
             <div className="simple-cont1">
               <img src={Thunder} alt="logo" className="" />
@@ -30,7 +30,7 @@ const Landingpagecont1 = () => {
           <div className="img-cont1">
             <img src={Istock} alt="logo" className="" />
           </div>
-        </div>
+        </div> */}
 
       {/* section 2 */}
       <div className="section2-cont1">

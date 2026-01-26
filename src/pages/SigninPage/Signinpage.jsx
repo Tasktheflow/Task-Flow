@@ -8,7 +8,6 @@
 //     <div>
 //       <div></div>
 
-
 //     </div>
 //   )
 // }
@@ -19,8 +18,9 @@ import { useState } from "react";
 import "./Signinpage.css";
 import illustration from "../../assets/illustration.png";
 import { FaUser, FaLock, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router"
-import { Link } from "react-router"
+import { useNavigate } from "react-router";
+import { Link } from "react-router";
+import { loginUser } from "../../services/authService";
 
 const Signinpage = () => {
   const [formData, setFormData] = useState({
@@ -57,7 +57,7 @@ const Signinpage = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -66,100 +66,117 @@ const Signinpage = () => {
     }
 
     setErrors({});
-    alert("Login successful!");
-    navigate("/dashboard")
+
+    try {
+      const res = await loginUser(formData);
+
+      if (res.success) {
+        console.log(res);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("token", res.data.token);
+        navigate("/dashboard");
+      } else {
+        console.log(res.message);
+      }
+    } catch (error) {
+      console.log(error.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
     <div className="login-container flex justify-center items-center">
       {/* LEFT SIDE */}
-     
 
       {/* RIGHT SIDE */}
       <div className=" flex items-center max-w-[1104px] justify-between mx-auto w-[87%]">
+        <div className="login-right">
+          <div className="up">
+            <h2 className="logo">
+              <span>Task</span>Flow
+            </h2>
+            <p className="tagline">Simple task management for teams</p>
+          </div>
 
-      <div className="login-right">
-        <div className="up">
-          <h2 className="logo"><span>Task</span>Flow</h2>
-          <p className="tagline">Simple task management for teams</p>
+          <form className="login-form" onSubmit={handleSubmit}>
+            <h3 className="wel-h3">Welcome back</h3>
+            <p className="subtitle">Login to continue to TaskFlow</p>
+
+            {/* EMAIL */}
+            <div className=" mb-5">
+              <div className="input-group">
+                <FaUser />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className=" outline-0 w-full"
+                />
+              </div>
+              {errors.email && <p className="error">{errors.email}</p>}
+            </div>
+
+            {/* PASSWORD */}
+            <div className=" mb-5">
+              <div className="input-group">
+                <FaLock />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className=" outline-0 w-full"
+                />
+                <span
+                  className="toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+              {errors.password && <p className="error">{errors.password}</p>}
+            </div>
+
+            {/* OPTIONS */}
+            <div className="options">
+              <label className="label">
+                <input
+                  type="checkbox"
+                  name="remember"
+                  checked={formData.remember}
+                  onChange={handleChange}
+                />
+                Remember me
+              </label>
+              <span className="forgot">Forgot password?</span>
+            </div>
+
+            {/* LOGIN BUTTON */}
+            <button type="submit" className="login-btn">
+              Login
+            </button>
+
+            {/* OR GOOGLE LOGIN */}
+            <p className="divider">
+              Or login with{" "}
+              <span>
+                <FaGoogle />
+              </span>
+            </p>
+
+            <p className="signup-text">
+              Don’t have an account?{" "}
+              <span className="span">
+                <Link to="/Signup"> Sign up</Link>
+              </span>
+            </p>
+          </form>
         </div>
-
-        <form className="login-form" onSubmit={handleSubmit}>
-          <h3 className="wel-h3">Welcome back</h3>
-          <p className="subtitle">Login to continue to TaskFlow</p>
-
-          {/* EMAIL */}
-          <div className=" mb-5">
-
-          <div className="input-group">
-            <FaUser />
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter Email"
-              value={formData.email}
-              onChange={handleChange}
-              className=" outline-0 w-full"
-            />
-          </div>
-          {errors.email && <p className="error">{errors.email}</p>}
-          </div>
-
-          {/* PASSWORD */}
-          <div className=" mb-5">
-
-          <div className="input-group">
-            <FaLock />
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Enter Password"
-              value={formData.password}
-              onChange={handleChange}
-              className=" outline-0 w-full"
-            />
-            <span
-              className="toggle"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-          {errors.password && <p className="error">{errors.password}</p>}
-          </div>
-
-          {/* OPTIONS */}
-          <div className="options">
-            <label className="label">
-              <input
-                type="checkbox"
-                name="remember"
-                checked={formData.remember}
-                onChange={handleChange}
-              />
-              Remember me
-            </label>
-            <span className="forgot">Forgot password?</span>
-          </div>
-
-          {/* LOGIN BUTTON */}
-          <button type="submit" className="login-btn">
-            Login
-          </button>
-
-          {/* OR GOOGLE LOGIN */}
-          <p className="divider">
-            Or login with <span><FaGoogle /></span>
-          </p>
-
-          <p className="signup-text">
-            Don’t have an account? <span className="span"><Link to="/Signup"> Sign up</Link></span>
-          </p>
-        </form>
-      </div>
-       <div className="login-left">
-        <img src={illustration} alt="Task illustration" />
-      </div>
+        <div className="login-left">
+          <img src={illustration} alt="Task illustration" />
+        </div>
       </div>
     </div>
   );

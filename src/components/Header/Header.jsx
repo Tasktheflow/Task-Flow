@@ -5,6 +5,9 @@ import './Header.css'
 import Logo from '../../assets/flat-color-icons_todo-list.png'
 
 const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  
   return (
 
     <div className='navbar'>
@@ -15,7 +18,17 @@ const Header = () => {
            <span className="flow">Flow</span>
           </h4>
         </div>
-        <div className='navlinks'>
+
+        {/* Hamburger icon */}
+      <div className={`hamburger ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(!isOpen)}>
+        <span className="bar"></span>
+        <span className="bar"></span>
+        <span className="bar"></span>
+      </div>
+
+      {/* nav-links */}
+
+        <div className={`navlinks ${isOpen ? 'active' : ''}`}>
           <ul className='nav-ul'>
             <li>Features </li>
             <li> Benefits</li>
@@ -26,8 +39,6 @@ const Header = () => {
             <Link to="/Signup">Get Started</Link>
            </button>
           
-
-
         </div>
         
      

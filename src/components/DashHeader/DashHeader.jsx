@@ -1,25 +1,39 @@
 import React from "react";
 import { Search, Bell, Plus } from "lucide-react";
 import Tasklogo from "../../assets/Tasklogo.png";
+import { FiMenu } from "react-icons/fi";
+import profilepic from "../../assets/defelaut.jpg"
 
-const DashHeader = () => {
+
+const DashHeader = ({setSidebarOpen}) => {
+ const storedUser = localStorage.getItem("user");
+const user = storedUser ? JSON.parse(storedUser) : null;
+
   return (
     <div>
-      <header className="bg-white  px-[57px] py-5 shadow-[0px_4px_12px_0px_#00000012] ">
+      <header className="bg-white  px-[57px] py-5 shadow-[0px_4px_12px_0px_#00000012] max-[900px]:px-5 max-[500px]:py-2">
         <div className="flex items-center justify-between ">
+       <div className=" flex items-center gap-8 max-[800px]:gap-4">
+            <button
+          onClick={() => setSidebarOpen(prev => !prev)}
+          className="hidden max-[1250px]:block text-green-600"
+        >
+          <FiMenu size={24} />
+        </button>
           <div>
             <img src={Tasklogo} alt="logo" />
           </div>
+       </div>
           <div className=" max-w-[695px] w-[48.3%]">
             <div className="relative flex items-center gap-2">
               <div className="relative flex-1 shadow-[-1px_4px_10px_0px_#0000000A,-4px_17px_18px_0px_#00000008,-9px_39px_24px_0px_#00000005,-17px_69px_28px_0px_#00000003,-26px_108px_31px_0px_#00000000] rounded-lg">
                 <input
                   type="text"
                   placeholder="Search your task here..."
-                  className="w-full pl-4 pr-12 py-2.75 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300 text-gray-600 placeholder-gray-400 placeholder:font-['Montserrat', sans-serif;] placeholder:text-[12px] placeholder:font-semibold"
+                  className="w-full pl-4 pr-12 py-2.75 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300 text-gray-600 placeholder-gray-400 placeholder:font-['Montserrat', sans-serif;] placeholder:text-[12px] placeholder:font-semibold max-[500px]:pr-1 max-[500px]:py-2 max-[450px]:hidden"
                 />
                 <button className="absolute right-0 top-1/2 -translate-y-1/2 w-11  bg-[#05A301] rounded-lg flex items-center justify-center hover:bg-green-500 transition-colors cursor-pointer h-full">
-                  <Search className="text-white" size={16} />
+                  <Search className="text-white max-[500px]:size-3" size={16}  />
                 </button>
               </div>
             </div>
@@ -41,11 +55,11 @@ const DashHeader = () => {
 
               <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
-            <div className=" flex items-center gap-2">
+            <div className=" flex items-center gap-2 max-[900px]:hidden">
                 <div className="w-10 h-10 bg-gray-300  rounded-full flex items-center justify-center text-white font-semibold">
-              AO
+              <img src={profilepic} alt="profilepic" />
             </div>
-            <span className="font-medium text-gray-800 font-['Inter', sans-serif;] text-[15px]">Ada Ogunleye</span>
+            <span className="font-medium text-gray-800 font-['Inter', sans-serif;] text-[15px]">{user?.username}</span>
             </div>
           </div>
         </div>

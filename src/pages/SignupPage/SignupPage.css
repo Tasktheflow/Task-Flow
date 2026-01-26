@@ -1,18 +1,15 @@
 .signup-container {
   display: flex;
-  padding-left: 219px;
-  padding-right: 219px;
-  padding-top: 79px;
-  padding-bottom: 79px;
-  gap: 91px;
+  /* padding-top: 79px;
+  padding-bottom: 79px; */
   /* align-items: center; */
   height: 100vh;
   background-image: url("../../assets/istockphoto-1483863447-2048x2048\ 1.png");
 }
 .left-div {
-  max-width: 366px;
+  /* max-width: 366px;
   width: 100%;
-  height: 551px;
+  height: 551px; */
 }
 .right-h2 {
   font-family: Inter;

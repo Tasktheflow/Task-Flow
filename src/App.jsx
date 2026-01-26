@@ -13,6 +13,7 @@ import Settings from "./pages/Settings/Settings";
 import { ProjectsProvider } from "./components/Contexts/ProjectsContext";
 import ScrollToTop from "./components/ScrollToTop";
 import ProjectDetails from "./pages/Projects/ProjectDetails";
+ import { ToastContainer } from 'react-toastify';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -37,6 +38,7 @@ function App() {
           </Route>
         </Routes>
       </ProjectsProvider>
+      <ToastContainer />
     </div>
   );
 }

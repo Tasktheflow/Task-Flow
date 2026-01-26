@@ -12,6 +12,7 @@
     padding-right: 41px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 
@@ -79,3 +80,100 @@ color: rgba(0, 0, 0, 1);
     cursor: pointer;
     color: #1AD5FE;
 }
+
+/* Hamburger menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: black;
+  transition: 0.3s;
+}
+
+
+/* responsiveness */
+@media (max-width: 768px) {
+
+.navbar{
+  padding: 20px;
+}
+
+  .hamburger {
+    display: flex;
+  }
+
+  .hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+  .navlinks {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 200px;
+    padding: 20px;
+    gap: 20px;
+    display: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    height: 100vh;
+  }
+.navlinks.active {
+    display: flex;
+  }
+
+  .nav-ul {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .nav-btn {
+    width: 100%;
+    text-align: center;
+  }
+  .nav-ul {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;  
+    width: 100%;              
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-ul li {
+    text-align: left;          
+    width: 100%;
+  }
+
+  .nav-btn {
+    width: 100%;
+    text-align: left;
+}
+}
+
+@media (max-width: 400px) {
+  .logo-div h4 {
+    font-size: 16px;
+  }
+  .nav-btn {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
+

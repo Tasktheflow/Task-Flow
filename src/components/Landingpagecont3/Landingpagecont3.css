@@ -216,3 +216,237 @@ letter-spacing: 0%;
 .card4-cont3 p{
     margin-bottom: 10px;
 }
+
+/* responsiveness */
+/* From 1420px downwards */
+@media (max-width: 1420px) {
+  .Landingpagecont3 {
+    gap: 100px; 
+  }
+
+  .text-cont3 h5,
+  .text-cont3 h6,
+  .checkbox-cont3 p {
+    font-size: 15px;
+  }
+}
+
+/* From 1200px downwards */
+@media (max-width: 1200px) {
+  .Landingpagecont3 {
+    gap: 80px;
+  }
+
+  .text-cont3 {
+    margin-left: 30px;
+    margin-top: 90px;
+    margin-bottom: 60px;
+  }
+
+  .text-cont3 h5,
+  .text-cont3 h6,
+  .checkbox-cont3 p {
+    font-size: 15px;
+  }
+
+  .cards-cont3 {
+    gap: 24px;
+    max-width: 550px;   
+
+  }
+  
+  .card1-cont3,
+  .card2-cont3,
+  .card3-cont3,
+  .card4-cont3 {
+    max-width: 260px;   
+    padding: 20px;      
+  }
+
+  .card1-cont3 h6,
+  .card2-cont3 h6,
+  .card3-cont3 h6,
+  .card4-cont3 h6 {
+    font-size: 15px;   
+  }
+
+  .card1-cont3 p,
+  .card2-cont3 p,
+  .card3-cont3 p,
+  .card4-cont3 p {
+    font-size: 13px;    
+  }
+
+
+}
+
+/* From 1024px downwards */
+@media (max-width: 1024px) {
+  .Landingpagecont3 {
+    gap: 60px;
+  }
+
+  .text-cont3 {
+    margin-left: 20px;
+    margin-top: 70px;
+    margin-bottom: 50px;
+    max-width: 500px;
+  }
+
+  .text-cont3 h5,
+  .text-cont3 h6,
+  .checkbox-cont3 p {
+    font-size: 14px;
+  }
+  .cards-cont3 {
+    max-width: 500px;
+    gap: 20px;
+  }
+
+  
+  .card1-cont3,
+  .card2-cont3,
+  .card3-cont3,
+  .card4-cont3 {
+    max-width: 240px;
+    padding: 18px;      
+  }
+
+  .card1-cont3 h6,
+  .card2-cont3 h6,
+  .card3-cont3 h6,
+  .card4-cont3 h6 {
+    font-size: 14px;   
+  }
+
+  .card1-cont3 p,
+  .card2-cont3 p,
+  .card3-cont3 p,
+  .card4-cont3 p {
+    font-size: 12px;    
+  }
+
+}
+
+/* From 900px downwards */
+@media (max-width: 900px) {
+  .Landingpagecont3 {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .text-cont3 {
+    margin: 40px 20px 20px;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .text-cont3 h5,
+  .text-cont3 h6,
+  .checkbox-cont3 p {
+    font-size: 14px;
+  }
+
+  .cards-cont3 {
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+    gap: 24px;
+  }
+
+  .firstcard-cont3,
+  .secondcard-cont3 {
+    margin: 0;
+    max-width: 100%;
+    align-items: center;
+  }
+}
+
+/* From 768px downwards */
+@media (max-width: 768px) {
+  .Landingpagecont3 {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 40px 20px;
+  }
+
+  .text-cont3 {
+    margin: 0;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .text-cont3 h5,
+  .text-cont3 h6,
+  .checkbox-cont3 p {
+    font-size: 13px;
+  }
+
+  .btns-cont3 {
+    margin: 20px auto 0;
+    font-size: 18px;
+  }
+
+  .cards-cont3 {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 100%;
+  }
+
+  .firstcard-cont3,
+  .secondcard-cont3 {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .card1-cont3,
+  .card2-cont3,
+  .card3-cont3,
+  .card4-cont3 {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* the white,blue,red card area */
+
+@media (max-width: 1420px) {
+  .firstcard-cont3 {
+    margin-top: 120px;  
+    margin-bottom: 80px;
+  }
+
+  .secondcard-cont3 {
+    margin-top: 140px;   
+    margin-bottom: 70px;
+  }
+}
+
+
+@media (max-width: 1200px) {
+  .firstcard-cont3 {
+    margin-top: 120px;   
+    margin-bottom: 80px;
+  }
+
+  .secondcard-cont3 {
+    margin-top: 140px;   
+    margin-bottom: 70px;
+  }
+}
+
+/* From 1024px downwards */
+@media (max-width: 1024px) {
+  .firstcard-cont3 {
+    margin-top: 100px;
+    margin-bottom: 70px;
+  }
+
+  .secondcard-cont3 {
+    margin-top: 120px;   
+    margin-bottom: 60px;
+  }
+}
