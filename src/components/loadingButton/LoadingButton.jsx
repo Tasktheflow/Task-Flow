@@ -13,7 +13,7 @@ const LoadingButton = ({
       type={type}
       onClick={onClick}
       disabled={loading}
-      className={`w-full flex items-center justify-center gap-2 py-2 rounded-lg transition disabled:opacity-70 ${className}`}
+      className={`w-full flex items-center justify-center gap-1 py-2 rounded-lg transition disabled:opacity-70 ${className}`}
     >
       {loading ? (
         <>

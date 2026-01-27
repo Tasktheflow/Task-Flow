@@ -88,6 +88,8 @@ const SignupPage = () => {
       const res = await registerUser(formData);
 
       if (res.success) {
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("token", res.data.token);
         toast.success(res.message);
       } else {
         toast.error(res.message);
@@ -201,7 +203,7 @@ const SignupPage = () => {
             <LoadingButton
               loading={loading}
               text="Register"
-              loadingText="Creating account..."
+              loadingText=""
               className="register-btn"
               type="submit"
             />

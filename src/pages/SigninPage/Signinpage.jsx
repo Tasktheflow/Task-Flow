@@ -21,6 +21,8 @@ import { FaUser, FaLock, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
 import { loginUser } from "../../services/authService";
+import { toast } from "react-toastify";
+import LoadingButton from "../../components/loadingButton/LoadingButton";
 
 const Signinpage = () => {
   const [formData, setFormData] = useState({
@@ -31,6 +33,7 @@ const Signinpage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   // Handle input changes
@@ -67,19 +70,23 @@ const Signinpage = () => {
 
     setErrors({});
 
+    setLoading(true);
+
     try {
       const res = await loginUser(formData);
 
       if (res.success) {
-        console.log(res);
+        toast.success(res.message);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         localStorage.setItem("token", res.data.token);
         navigate("/dashboard");
       } else {
-        console.log(res.message);
+        toast.error(res.message);
       }
     } catch (error) {
-      console.log(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,9 +161,13 @@ const Signinpage = () => {
             </div>
 
             {/* LOGIN BUTTON */}
-            <button type="submit" className="login-btn">
-              Login
-            </button>
+            <LoadingButton
+              loading={loading}
+              text="Login"
+              loadingText=""
+              className="login-btn"
+              type="submit"
+            />
 
             {/* OR GOOGLE LOGIN */}
             <p className="divider">
