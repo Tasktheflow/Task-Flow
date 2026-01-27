@@ -130,7 +130,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
         damping: 25,
       }}
     >
-      <div className=" bg-white  w-[52.64%] h-[99%] rounded-2xl p-10 overflow-auto [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:bg-gray-100">
+      <div className=" bg-white  w-[52.64%] h-[99%] rounded-2xl p-10 overflow-auto [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:bg-gray-100 max-[1024px]:w-[80%] max-[600px]:w-[90%] max-[410px]:w-full max-[410px]:p-4">
         <form className=" ">
           <h1 className=" font-semibold text-[20px]">Create New Project</h1>
           <span className=" w-full h-px bg-[#74747480] mt-[25px] block"></span>
@@ -197,7 +197,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
               <label className="block text-sm font-medium mb-3">
                 Project Color
               </label>
-              <div className="flex gap-3">
+              <div className="flex gap-3 max-[505px]:grid max-[505px]:grid-cols-4 max-[505px]:gap-2.5">
                 {colors.map((color) => (
                   <button
                     key={color}
@@ -232,9 +232,9 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                       className="w-5 h-5 text-green-600 rounded focus:ring-2 focus:ring-green-500"
                     />
                     <div className="text-2xl">{member.avatar}</div>
-                    <div className="flex-1">
+                    <div className="flex-1 ">
                       <div className="font-medium">{member.name}</div>
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-500 ">
                         {member.email}
                       </div>
                     </div>
@@ -246,7 +246,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                 {formData.teamMembers.length !== 1 ? "s" : ""} selected
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 max-[500px]:flex-col">
               <button
                 type="button"
                 onClick={closeModal}

@@ -22,6 +22,7 @@ function App() {
     <div>
       <ProjectsProvider>
         <ScrollToTop />
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<Landingpage />} />
           <Route path="/Signup" element={<SignupPage />} />
@@ -38,7 +39,6 @@ function App() {
           </Route>
         </Routes>
       </ProjectsProvider>
-      <ToastContainer />
     </div>
   );
 }
