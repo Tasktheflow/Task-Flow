@@ -23,7 +23,7 @@ const ProjectDetails = () => {
   const navigate = useNavigate();
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [activeTask, setActiveTask] = useState(null);
-   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   const [boards, setBoards] = useState([
     { id: "todo", title: "To-Do", tasks: [] },
@@ -37,7 +37,7 @@ const ProjectDetails = () => {
       activationConstraint: {
         distance: 8, // Drag must move 8px to activate
       },
-    })
+    }),
   );
 
   const handleDragStart = (event) => {
@@ -109,7 +109,7 @@ const ProjectDetails = () => {
             return { ...board, tasks: newTasks };
           }
           return board;
-        })
+        }),
       );
     } else {
       setBoards((prevBoards) =>
@@ -128,7 +128,7 @@ const ProjectDetails = () => {
           }
 
           return board;
-        })
+        }),
       );
     }
   };
@@ -138,8 +138,8 @@ const ProjectDetails = () => {
       prevBoards.map((board) =>
         board.id === task.status // status comes from modal dropdown
           ? { ...board, tasks: [...board.tasks, task] }
-          : board
-      )
+          : board,
+      ),
     );
   };
 
@@ -157,9 +157,9 @@ const ProjectDetails = () => {
       transition={{ duration: 0.25, ease: "easeOut" }}
       className=" w-full"
     >
-      <header className=" px-[57px] flex items-center w-full justify-between border-b border-[#A1A3AB4D] pb-[25px]">
+      <header className=" px-[57px] flex items-center w-full justify-between border-b border-[#A1A3AB4D] pb-[25px] max-[1250px]:px-3 max-[500px]:pb-2.5 max-[460px]:flex-col max-[460px]:items-start max-[460px]:gap-2">
         <div>
-          <div className=" flex gap-7">
+          <div className=" flex gap-7 max-[800px]:gap-2 max-[460px]:gap-10">
             <button onClick={() => navigate(-1)}>
               <IoArrowBackOutline size={24} className=" font-light" />
             </button>
@@ -174,31 +174,36 @@ const ProjectDetails = () => {
           </div>
           {/* <p className="mt-2 text-gray-600">{project.description}</p> */}
         </div>
-        <div className=" flex gap-[17px] items-center">
+        <div className=" flex gap-[17px] items-center max-[550px]:text-[12px] max-[550px]:gap-1.5">
           <button
             className=" flex items-center justify-center bg-[#05A301] px-5 py-2.5 rounded-lg gap-2.5 text-white cursor-pointer"
             onClick={() => setShowTaskModal(true)}
           >
             {" "}
-            <span className=" text-[16px] ">+</span>Add Task
+            <span className=" text-[16px] max-[550px]:text-[12px]">+</span>Add Task
           </button>
-          <button className=" flex items-center justify-center px-5 py-2.5 bg-transparent border border-[#05A301] text-[#05A301] text-[15px] font-medium rounded-lg gap-[7px] cursor-pointer"   onClick={() => setShowInviteModal(true)} >
+          <button
+            className=" flex items-center justify-center px-5 py-2.5 bg-transparent border border-[#05A301] text-[#05A301] text-[15px] font-medium rounded-lg gap-[7px] cursor-pointer max-[550px]:px-2 max-[550px]:py-1.5"
+            onClick={() => setShowInviteModal(true)}
+          >
             <MdGroupAdd className=" size-[19.5px]" />
             Add Members
           </button>
         </div>
       </header>
-      <div className="p-6">
+      <div className="p-6 overflow-auto">
         <DndContext
           onDragEnd={handleDragEnd}
           sensors={sensors}
           collisionDetection={closestCorners}
           onDragStart={handleDragStart}
         >
-          <div className="grid grid-cols-4 gap-4 items-start">
-            {boards.map((board) => (
-              <Board key={board.id} board={board} />
-            ))}
+          <div className=" max-[1090px]:w-[1050px]">
+            <div className="grid grid-cols-4 gap-4 items-start ">
+              {boards.map((board) => (
+                <Board key={board.id} board={board} />
+              ))}
+            </div>
           </div>
 
           <DragOverlay>

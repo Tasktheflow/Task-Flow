@@ -12,7 +12,7 @@ const Board = ({ board }) => {
   return (
     <div
       ref={setNodeRef}
-      className=" rounded-xl  min-h-[300px] bg-[#A1A3AB12]"
+      className=" rounded-xl  min-h-[300px] bg-[#A1A3AB12] min-w-[250px]"
     >
       <div className=" bg-[#A1A3AB12] flex w-full justify-between items-center px-5 py-[5px]">
         <h2 className="font-medium">{board.title}</h2>
