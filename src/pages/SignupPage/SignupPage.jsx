@@ -105,8 +105,8 @@ const SignupPage = () => {
 
   return (
     <div className="signup-container flex items-center justify-center">
-      <div className=" flex">
-        <div className="Left-div">
+      <div className=" flex max-w-[900px] w-[80%] justify-between max-[980px]:gap-5 max-[650px]:justify-center max-[400px]:w-90% max-[329%]:w-99%">
+        <div className=" flex justify-center items-center max-[650px]:hidden">
           <img src={alt} alt="illustration" />
         </div>
 
@@ -116,9 +116,11 @@ const SignupPage = () => {
           </h2>
           <p className="right-p">Simple task management for teams</p>
 
-          <form onSubmit={handleSubmit} className="signup-form">
-            <h3 className="signup-h3">Create an Account</h3>
-            <p className="signup-p">Sign up to continue to TaskFlow</p>
+          <form onSubmit={handleSubmit} className="signup-form max-[400px]:p-2">
+            <div className=" text-center w-full">
+              <h3 className="signup-h3">Create an Account</h3>
+              <p className="signup-p pt-2">Sign up to continue to TaskFlow</p>
+            </div>
 
             {/* Username */}
             <div className="form-div">
@@ -204,18 +206,22 @@ const SignupPage = () => {
               loading={loading}
               text="Register"
               loadingText=""
-              className="register-btn"
+              className="register-btn cursor-pointer"
               type="submit"
             />
 
             <p className="last-p">
               Already have an account?{" "}
-              <span>
+              <span className=" text-green-500">
                 {" "}
-                <Link to="/Signin">Log in</Link>
+                <Link to="/Signin" >Log in</Link>
               </span>
             </p>
           </form>
+           <p className=" font-semibold text-[16px] w-[335px] text-center place-self-center mt-7 max-[360px]:w-full">
+            By continuing, you agree to TaskFlow’s <span className=" text-[#1A73E8]">Terms of Service</span>{" "}
+            and <span className=" text-[#1A73E8]"> Privacy Policy</span>
+          </p>
         </div>
       </div>
     </div>

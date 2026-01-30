@@ -63,12 +63,12 @@ const InviteMemberModal = ({ onClose, projectId }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-xl max-w-[642px] p-8 relative w-[50%] min-h-[550px] flex flex-col"
+        className="bg-white rounded-xl max-w-[642px] p-8 relative w-[50%] min-h-[550px] flex flex-col max-[1020px]:w-[60%] max-[900px]:w-[70%] max-[750px]:w-[80%] max-[600px]:w-[95%] max-[500px]:px-4 max-[500px]:min-h-[480px] max-[500px]:pt-9"
       >
         {/* Header */}
-        <div className="flex justify-between items-center mb-6 h-[25px]">
+        <div className="flex justify-between items-center mb-6 h-[25px] max-[370px]:flex-col-reverse max-[370px]:items-start max-[370px]:gap-2">
           <div>
-            <h2 className="text-[16px] font-semibold font-['Montserrat']">
+            <h2 className="text-[16px] font-semibold font-['Montserrat'] max-[450px]:text-[12px]">
               Send an invite to a new member
             </h2>
             <span className=" w-[98px] block h-0.5 bg-[#05A301]"></span>
@@ -85,7 +85,7 @@ const InviteMemberModal = ({ onClose, projectId }) => {
         {/* Email Section */}
         <form onSubmit={handleSendInvite} className="mb-[45px]">
           <label className="block text-[14px] font-semibold mb-[9px]">Email</label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 max-[450px]:flex-col">
             <input
               type="email"
               value={email}
@@ -97,7 +97,7 @@ const InviteMemberModal = ({ onClose, projectId }) => {
               type="submit"
               className="bg-[#05A301] text-white px-6 py-2.5 rounded-lg text-[12px] font-medium hover:bg-[#048f01] transition-colors"
             >
-              {sendSuccess ? "Sent! ✓" : "Send Invite"}
+              {sendSuccess ? "Sent!" : "Send Invite"}
             </button>
           </div>
           {sendSuccess && (
@@ -112,7 +112,7 @@ const InviteMemberModal = ({ onClose, projectId }) => {
           <label className="block text-[14px] font-semibold mb-[9px]">
             Project Link
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 max-[450px]:flex-col">
             <input
               type="text"
               value={projectLink}

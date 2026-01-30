@@ -21,7 +21,7 @@ const Projects = () => {
           <div
             className={`${
               projects.length > 0
-                ? "flex items-center justify-between"
+                ? "flex items-center justify-between max-[640px]:flex-col max-[640px]:gap-2.5 max-[640px]:items-start"
                 : "block"
             } px-10`}
           >
@@ -44,7 +44,7 @@ const Projects = () => {
 
           {/* Project cards */}
           {projects.length > 0 && (
-            <div className="mt-8 grid grid-cols-4 gap-4 px-10">
+            <div className="mt-8 grid grid-cols-4 gap-4 px-10  max-[1250px]:grid-cols-3  max-[1010px]:grid-cols-2  max-[600px]:grid-cols-1">
               {projects.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

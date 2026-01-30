@@ -53,7 +53,7 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-xl w-[700px] p-10 overflow-y-auto h-[95%] [&::-webkit-scrollbar]:w-0"
+        className="bg-white rounded-xl w-[700px] p-10 overflow-y-auto h-[95%] [&::-webkit-scrollbar]:w-0 max-[820px]:w-[90%] max-[450px]:p-4"
       >
         <h2 className="text-[20px] font-semibold mb-[33px]">Create New Task</h2>
         <span className=" h-px w-full bg-[#74747480] block mb-[33px]"></span>
@@ -69,7 +69,7 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
               value={form.title}
               onChange={handleChange}
               placeholder="e.g. Design website dashboard"
-              className="w-full mt-1 border rounded-lg px-3 py-[18.5px] pl-6 text-[18px] border-[#A1A3AB] placeholder:text-[20px]"
+              className="w-full mt-1 border rounded-lg px-3 py-[18.5px] pl-6 text-[18px] border-[#A1A3AB] placeholder:text-[20px] max-[400px]:px-1.5"
             />
             {errors.title && (
               <p className="text-xs text-red-500 mt-1">{errors.title}</p>
@@ -84,12 +84,12 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
               value={form.description}
               onChange={handleChange}
               placeholder="What is this task about?"
-              className="w-full mt-1 border rounded-lg px-6 py-4 text-[18px] min-h-[190px] border-[#A1A3AB] placeholder:text-[20px]"
+              className="w-full mt-1 border rounded-lg px-6 py-4 text-[18px] min-h-[190px] border-[#A1A3AB] placeholder:text-[20px] max-[350px]:px-1.5"
             />
           </div>
 
           {/* Status + Priority */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 max-[490px]:grid-cols-1">
             <div>
               <Dropdown
                 label="Status"
@@ -138,7 +138,7 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
           </div>
 
           {/* Assign + Due date */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 max-[490px]:grid-cols-1">
             <Dropdown
               label="Assign To"
               value={form.assignee}
@@ -176,17 +176,17 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
           </label>
 
           {/* Actions */}
-          <div className="flex justify-center gap-3 pt-4">
+          <div className="flex justify-center gap-3 pt-4 max-[325px]:flex-col-reverse max-[325px]:w-full">
             <button
               type="button"
               onClick={onClose}
-              className="w-[247px] py-2 border rounded-lg text-[15px] text-green-600"
+              className="w-[247px] py-2 border rounded-lg text-[15px] text-green-600 max-[325px]:w-full"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="w-[247px] py-2 bg-green-600 text-white rounded-lg text-[15px]"
+              className="w-[247px] py-2 bg-green-600 text-white rounded-lg text-[15px] max-[325px]:w-full"
             >
               + Create Task
             </button>

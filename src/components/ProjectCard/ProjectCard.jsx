@@ -24,8 +24,8 @@ const ProjectCard = ({ project }) => {
             className=" size-[19px] block rounded-[50%] "
             style={{ backgroundColor: project.color }}
           ></span>
-          <div className="relative group max-w-[200px]">
-            <h3 className="truncate font-normal text-[16px]">
+          <div className="relative group max-w-[200px] max-[500px]:w-full">
+            <h3 className="truncate font-normal text-[16px] w-full">
               {project.title}
             </h3>
 
@@ -54,7 +54,7 @@ const ProjectCard = ({ project }) => {
           opacity-0 group-hover:opacity-100
           transition-opacity duration-150
           text-gray-400 hover:text-red-500
-          p-1 rounded hover:bg-red-50
+          p-1 rounded hover:bg-red-50 max-[800px]:opacity-100 max-[800px]:group-hover:opacity-0
         "
           >
             <Trash2 size={18} />
