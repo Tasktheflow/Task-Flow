@@ -7,10 +7,17 @@ import Mobile from "../../assets/ant-design_mobile-outlined.png";
 import Checked from "../../assets/Group.png";
 import People from "../../assets/bi_people-fill.png";
 import People2 from "../../assets/bi_people-fill (1).png";
+import { motion } from "framer-motion";
 
 const Landingpagecont3 = () => {
   return (
-    <div className="Landingpagecont3">
+    <motion.div
+      className="Landingpagecont3"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+    >
       <div className="text-cont3">
         <h6> Why Teams Choose TaskFlow</h6>
         <h5>
@@ -81,7 +88,7 @@ const Landingpagecont3 = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
