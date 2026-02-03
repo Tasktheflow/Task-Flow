@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import './Header.css'
 import Logo from '../../assets/flat-color-icons_todo-list.png'
+import { motion } from "framer-motion";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,10 @@ const Header = () => {
   
   return (
 
-    <div className='navbar'>
+    <motion.div className='navbar'
+     initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}>
         <div className='logo-div'>
           <Link to ="/">  <img src ={Logo} alt='logo'/> </Link>
           <h4> 
@@ -46,7 +50,7 @@ const Header = () => {
 
 
 
-    </div>
+    </motion.div>
   )
 }
 

@@ -100,7 +100,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
       // 3. Optionally log
       console.log("Project Data:", formData);
 
-      // 4. Close modal (if you have a state for modal)
+      // 4. Close modal 
       setShowCreateModal(false);
 
       // 5. Navigate to Projects page
@@ -219,8 +219,8 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
               <label className="block text-sm font-medium mb-3">
                 Team members
               </label>
-              <div className="border border-gray-300 rounded-lg p-4 space-y-3">
-                {teamMembersList.map((member) => (
+              <div className="border border-gray-300 rounded-lg p-4 space-y-3 min-h-[83px]">
+                {/* {teamMembersList.map((member) => (
                   <label
                     key={member.id}
                     className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition"
@@ -239,7 +239,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                       </div>
                     </div>
                   </label>
-                ))}
+                ))} */}
               </div>
               <p className="text-sm text-gray-500 mt-2">
                 {formData.teamMembers.length} member

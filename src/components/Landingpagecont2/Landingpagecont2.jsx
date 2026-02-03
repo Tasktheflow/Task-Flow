@@ -6,10 +6,16 @@ import Picon2 from "../../assets/picon_board (2).png";
 import Picon3 from "../../assets/picon_board (3).png";
 import Picon4 from "../../assets/picon_board (4).png";
 import Picon5 from "../../assets/picon_board (5).png";
+import { motion } from "framer-motion";
 
 const Landingpagecont2 = () => {
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 2.3 }}
+    >
       <div className="landingpagecont2">
         <div className="text-cont2">
           <h5> Everything You Need to Stay Organized</h5>
@@ -83,7 +89,7 @@ const Landingpagecont2 = () => {
         </div>
 
         <div className="features-cont2">
-          <div className="cards-cont2" style={{ maxWidth: 308}}>
+          <div className="cards-cont2" style={{ maxWidth: 308 }}>
             <img src={Picon5} alt="img" className="" />
             <p> Fast Collaboration</p>
             <h6 style={{ maxWidth: 308 }}>
@@ -94,7 +100,7 @@ const Landingpagecont2 = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
