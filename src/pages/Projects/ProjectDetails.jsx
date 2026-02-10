@@ -143,7 +143,7 @@ const ProjectDetails = () => {
     );
   };
 
-  const project = projects.find((p) => String(p.id) === projectId);
+ const project = projects?.find((p) => p._id === projectId);
 
   if (!project) {
     return <p>Project not found</p>;
@@ -167,9 +167,9 @@ const ProjectDetails = () => {
               {" "}
               <span
                 className=" size-[19px] block rounded-[50%] "
-                style={{ backgroundColor: project.color }}
+                 style={{ backgroundColor: project.color || '#10B981' }}
               ></span>
-              <h2 className="text-[20px] font-light ">{project.title}</h2>
+              <h2 className="text-[20px] font-light ">{project.projectTitle}</h2>
             </div>
           </div>
           {/* <p className="mt-2 text-gray-600">{project.description}</p> */}

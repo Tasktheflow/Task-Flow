@@ -2,17 +2,22 @@ import { useProjects } from "../Contexts/ProjectsContext";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { createProject } from "../../services/authService";
+import { toast } from "react-toastify";
+import LoadingButton from "../loadingButton/LoadingButton";
 
 const capitalizeWords = (str) =>
   str.replace(/\b\w/g, (char) => char.toUpperCase());
 
 const CreateProjectModal = ({ onClose, closeModal }) => {
   const { addProject, showCreateModal, setShowCreateModal } = useProjects();
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState({ text: "", type: "" });
+
   const navigate = useNavigate();
 
-
   const [formData, setFormData] = useState({
-    title: "",
+    projectTitle: "",
     description: "",
     color: "#10B981",
     teamMembers: [],
@@ -47,34 +52,34 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
     "#FF8C00", // orange
   ];
 
-  const teamMembersList = [
-    {
-      id: 1,
-      name: "Samson Adebayo",
-      email: "samson.a1996@gmail.com",
-      avatar: "👨🏾",
-    },
-    {
-      id: 2,
-      name: "Seyibadoo",
-      email: "seyibadoo123@gmail.com",
-      avatar: "👨🏿‍🦳",
-    },
-    {
-      id: 3,
-      name: "H. Oladamola",
-      email: "h.olatunde03@gmail.com",
-      avatar: "🧑🏿‍🦲",
-    },
-  ];
+  // const teamMembersList = [
+  //   {
+  //     id: 1,
+  //     name: "Samson Adebayo",
+  //     email: "samson.a1996@gmail.com",
+  //     avatar: "👨🏾",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Seyibadoo",
+  //     email: "seyibadoo123@gmail.com",
+  //     avatar: "👨🏿‍🦳",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "H. Oladamola",
+  //     email: "h.olatunde03@gmail.com",
+  //     avatar: "🧑🏿‍🦲",
+  //   },
+  // ];
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.title.trim()) {
-      newErrors.title = "Project title is required";
-    } else if (formData.title.trim().length < 3) {
-      newErrors.title = "Project title must be at least 3 characters";
+    if (!formData.projectTitle.trim()) {
+      newErrors.projectTitle = "Project title is required";
+    } else if (formData.projectTitle.trim().length < 3) {
+      newErrors.projectTitle = "Project title must be at least 3 characters";
     }
 
     if (!formData.description.trim()) {
@@ -87,37 +92,76 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (validateForm()) {
-      addProject({
-        id: Date.now(),
-        ...formData,
-      });
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
-      // 2. Mark form submitted
-      setSubmitted(true);
+  const sendInvite = (e) => {
+    e.preventDefault();
+     e.stopPropagation();
+    const trimmedEmail = email.trim();
 
-      // 3. Optionally log
-      console.log("Project Data:", formData);
+    if (!trimmedEmail) {
+      setMessage({ text: "Please enter an email address", type: "error" });
+      return;
+    }
 
-      // 4. Close modal 
-      setShowCreateModal(false);
+    if (!validateEmail(trimmedEmail)) {
+      setMessage({ text: "Please enter a valid email address", type: "error" });
+      return;
+    }
 
-      // 5. Navigate to Projects page
-      navigate("/dashboard/projects");
+    setMessage({
+      text: `Invitation sent successfully to ${trimmedEmail}!`,
+      type: "success",
+    });
 
-      closeModal();
+    setTimeout(() => {
+      setEmail("");
+      setMessage({ text: "", type: "" });
+    }, 2000);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      sendInvite();
     }
   };
 
-  const toggleTeamMember = (memberId) => {
-    setFormData((prev) => ({
-      ...prev,
-      teamMembers: prev.teamMembers.includes(memberId)
-        ? prev.teamMembers.filter((id) => id !== memberId)
-        : [...prev.teamMembers, memberId],
-    }));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const isValid = validateForm();
+    if (!isValid) return;
+
+    try {
+      const res = await addProject(formData); // context handles API
+
+      if (res.success) {
+        toast.success("Project created");
+
+        setSubmitted(true);
+        setShowCreateModal(false);
+        navigate("/dashboard/projects");
+        closeModal();
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Failed to create project");
+    }
   };
+
+  // const toggleTeamMember = (memberId) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     teamMembers: prev.teamMembers.includes(memberId)
+  //       ? prev.teamMembers.filter((id) => id !== memberId)
+  //       : [...prev.teamMembers, memberId],
+  //   }));
+  // };
 
   return (
     <motion.div
@@ -141,29 +185,29 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
               </label>
               <input
                 type="text"
-                value={formData.title}
+                value={formData.projectTitle}
                 onChange={(e) => {
                   const value = capitalizeWords(e.target.value);
 
                   setFormData((prev) => ({
                     ...prev,
-                    title: value,
+                     projectTitle: value,
                   }));
 
-                  if (errors.title) {
+                  if (errors.projectTitle) {
                     setErrors((prev) => ({
                       ...prev,
-                      title: "",
+                      projectTitle: "",
                     }));
                   }
                 }}
                 placeholder="e.g., Website Redesign"
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                  errors.title ? "border-red-500" : "border-gray-300"
+                  errors.projectTitle ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              {errors.projectTitle && (
+                <p className="text-red-500 text-sm mt-1">{errors.projectTitle}</p>
               )}
             </div>
             {/* Description */}
@@ -193,6 +237,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                 </p>
               )}
             </div>
+
             <div className="mb-6">
               <label className="block text-sm font-medium mb-3">
                 Project Color
@@ -212,6 +257,45 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                   />
                 ))}
               </div>
+            </div>
+
+            <div className="space-y-2 mb-6">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-900"
+              >
+                Email
+              </label>
+              <div className="flex gap-3">
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyUp={handleKeyPress}
+                  placeholder="samirnasr99@gmail.com"
+                  className="flex-1 px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-gray-400"
+                />
+                <button
+                  onClick={sendInvite} 
+                  type="button" 
+                  className="px-7 py-2.5 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 active:bg-green-800 transition-colors whitespace-nowrap"
+                >
+                  Send Invite
+                </button>
+              </div>
+
+              {message.text && (
+                <div
+                  className={`mt-3 p-3 rounded-md text-sm border ${
+                    message.type === "success"
+                      ? "bg-green-50 text-green-800 border-green-200"
+                      : "bg-red-50 text-red-800 border-red-200"
+                  }`}
+                >
+                  {message.text}
+                </div>
+              )}
             </div>
 
             {/* Team Members */}

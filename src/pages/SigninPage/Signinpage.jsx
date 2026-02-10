@@ -1,19 +1,3 @@
-// import React from 'react'
-// import './Signinpage.css'
-// import { useState } from 'react';
-
-// const Signinpage = () => {
-
-//   return (
-//     <div>
-//       <div></div>
-
-//     </div>
-//   )
-// }
-
-// export default Signinpage
-
 import { useState } from "react";
 import "./Signinpage.css";
 import illustration from "../../assets/illustration.png";
