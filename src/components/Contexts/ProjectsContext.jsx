@@ -1,47 +1,73 @@
 // context/ProjectsContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
+import {
+  getMyProjects,
+  createProject,
+  deleteProject as deleteProjectAPI,
+} from "../../services/authService";
 
-const ProjectsContext = createContext();
+const ProjectsContext = createContext(null);
 
 export const ProjectsProvider = ({ children }) => {
-  // 🔹 Projects state (persisted)
-  const [projects, setProjects] = useState(() => {
-    const storedProjects = localStorage.getItem("projects");
-    return storedProjects ? JSON.parse(storedProjects) : [];
-  });
-
-  // 🔹 Modal state (shared between Dashboard & Projects)
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  // 🔹 Persist projects to localStorage
+  const fetchProjects = async () => {
+    setLoading(true);
+    try {
+      const res = await getMyProjects();
+      setProjects(res.data);
+    } catch (error) {
+      console.log("Failed to fetch projects", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // In ProjectsContext.jsx - addProject function
+  const addProject = async (projectData) => {
+    try {
+      const res = await createProject(projectData);
+      if (res.success) {
+        await fetchProjects();
+      }
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  // In ProjectsContext.jsx
+  const deleteProject = async (projectId) => {
+    try {
+      const res = await deleteProjectAPI(projectId);
+
+      if (res.success) {
+        setProjects((prev) =>
+          prev.filter((project) => project._id !== projectId),
+        );
+      }
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   useEffect(() => {
-    localStorage.setItem("projects", JSON.stringify(projects));
-  }, [projects]);
-
-  // 🔹 Add project
-  const addProject = (project) => {
-    setProjects((prev) => [
-      ...prev,
-      {
-        id: project.id ?? crypto.randomUUID(), // ✅ ensure id
-        ...project,
-      },
-    ]);
-  };
-
-  // 🔹 Delete project
-  const deleteProject = (projectId) => {
-    setProjects((prev) => prev.filter((project) => project.id !== projectId));
-  };
+    fetchProjects();
+  }, []);
 
   return (
     <ProjectsContext.Provider
       value={{
         projects,
+        loading,
+        fetchProjects,
         addProject,
+        deleteProject,
         showCreateModal,
         setShowCreateModal,
-        deleteProject,
       }}
     >
       {children}
