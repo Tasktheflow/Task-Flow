@@ -15,10 +15,10 @@ const Projects = () => {
   const isProjectDetails = Boolean(projectId);
 
   return (
-    <div className="bg-[url('/src/assets/dashbg.png')] h-screen pt-[45px] font-['inter']">
+    <div className="bg-[url('/src/assets/dashbg.png')] h-screen pt-[45px] font-['inter'] max-[500px]:pt-3">
       {!isProjectDetails && (
         <>
-          <div className="flex items-center justify-between px-10 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-2.5">
+          <div className="flex items-center justify-between px-10 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-2.5 max-[500px]:px-3">
             <div>
               <h1 className="text-[24px] font-medium">All projects</h1>
               <p className="mt-[11px] text-[20px] font-light">
@@ -48,7 +48,7 @@ const Projects = () => {
           )}
 
           {!loading && projects?.length > 0 && (
-            <div className="mt-8 grid grid-cols-4 gap-4 px-10 max-[1250px]:grid-cols-3 max-[1010px]:grid-cols-2 max-[600px]:grid-cols-1">
+            <div className="mt-8 grid grid-cols-4 gap-4 px-10 max-[1250px]:grid-cols-3 max-[1010px]:grid-cols-2 max-[600px]:grid-cols-1 max-[500px]:px-3">
               {projects.map((project) => (
                 <ProjectCard key={project._id} project={project} />
               ))}

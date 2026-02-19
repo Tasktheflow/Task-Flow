@@ -2,17 +2,18 @@ import { useProjects } from "../Contexts/ProjectsContext";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { createProject } from "../../services/authService";
+import { addMember } from "../../services/authService";
 import { toast } from "react-toastify";
-import LoadingButton from "../loadingButton/LoadingButton";
 
 const capitalizeWords = (str) =>
   str.replace(/\b\w/g, (char) => char.toUpperCase());
 
 const CreateProjectModal = ({ onClose, closeModal }) => {
-  const { addProject, showCreateModal, setShowCreateModal } = useProjects();
+  const { addProject, setShowCreateModal } = useProjects();
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState({ text: "", type: "" });
+  const [emailError, setEmailError] = useState("");
+  const [invitedEmails, setInvitedEmails] = useState([]); // [{ email, checked }]
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
@@ -20,58 +21,17 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
     projectTitle: "",
     description: "",
     color: "#10B981",
-    teamMembers: [],
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "title") {
-      setFormData((prev) => ({
-        ...prev,
-        title: value ? capitalizeWords(value) : "",
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
 
-  const colors = [
-    "#10B981", // green
-    "#0000FF", // blue
-    "#9CA3AF", // gray
-    "#EF4444", // red
-    "#FFFF00", // yellow
-    "#00FFFF", // cyan
-    "#FF8C00", // orange
-  ];
+  const colors = ["green", "blue", "gray", "red", "yellow", "teal", "orange"];
 
-  // const teamMembersList = [
-  //   {
-  //     id: 1,
-  //     name: "Samson Adebayo",
-  //     email: "samson.a1996@gmail.com",
-  //     avatar: "👨🏾",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Seyibadoo",
-  //     email: "seyibadoo123@gmail.com",
-  //     avatar: "👨🏿‍🦳",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "H. Oladamola",
-  //     email: "h.olatunde03@gmail.com",
-  //     avatar: "🧑🏿‍🦲",
-  //   },
-  // ];
+  const selectedCount = invitedEmails.filter((m) => m.checked).length;
+
+  // ─── Validation ───────────────────────────────────────────────────────────
+
+  const validateEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
 
   const validateForm = () => {
     const newErrors = {};
@@ -92,93 +52,128 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  // ─── Add email locally (no API call yet) ─────────────────────────────────
 
-  const sendInvite = (e) => {
+  const handleAddEmail = (e) => {
     e.preventDefault();
-     e.stopPropagation();
-    const trimmedEmail = email.trim();
+    e.stopPropagation();
 
-    if (!trimmedEmail) {
-      setMessage({ text: "Please enter an email address", type: "error" });
+    const trimmed = email.trim().toLowerCase();
+
+    if (!trimmed) {
+      setEmailError("Please enter an email address.");
+      return;
+    }
+    if (!validateEmail(trimmed)) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+    if (invitedEmails.find((m) => m.email === trimmed)) {
+      setEmailError("This email has already been added.");
       return;
     }
 
-    if (!validateEmail(trimmedEmail)) {
-      setMessage({ text: "Please enter a valid email address", type: "error" });
-      return;
-    }
-
-    setMessage({
-      text: `Invitation sent successfully to ${trimmedEmail}!`,
-      type: "success",
-    });
-
-    setTimeout(() => {
-      setEmail("");
-      setMessage({ text: "", type: "" });
-    }, 2000);
+    setInvitedEmails((prev) => [...prev, { email: trimmed, checked: true }]);
+    setEmail("");
+    setEmailError("");
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      sendInvite();
-    }
+  const handleKeyUp = (e) => {
+    if (e.key === "Enter") handleAddEmail(e);
   };
+
+  const toggleMember = (targetEmail) => {
+    setInvitedEmails((prev) =>
+      prev.map((m) =>
+        m.email === targetEmail ? { ...m, checked: !m.checked } : m
+      )
+    );
+  };
+
+  const removeMember = (targetEmail) => {
+    setInvitedEmails((prev) => prev.filter((m) => m.email !== targetEmail));
+  };
+
+  // ─── Submit: create project first → then addMember for each selected ──────
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const isValid = validateForm();
-    if (!isValid) return;
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
 
     try {
-      const res = await addProject(formData); // context handles API
+      const res = await addProject(formData);
 
-      if (res.success) {
-        toast.success("Project created");
+      if (!res.success) {
+        toast.error(res.message || "Failed to create project");
+        return;
+      }
 
-        setSubmitted(true);
-        setShowCreateModal(false);
-        navigate("/dashboard/projects");
-        closeModal();
-      } else {
-        toast.error(res.message);
+      toast.success("Project created!");
+
+      // Close immediately — don't wait for member invites
+      setShowCreateModal(false);
+      closeModal();
+      navigate("/dashboard/projects");
+
+      // Add members in the background
+      const projectId = res.data?._id;
+      const selectedEmails = invitedEmails
+        .filter((m) => m.checked)
+        .map((m) => m.email);
+
+        console.log("projectId:", projectId, "emails:", selectedEmails)
+
+      if (projectId && selectedEmails.length > 0) {
+        Promise.allSettled(
+          selectedEmails.map((memberEmail) => addMember(projectId, memberEmail))
+        ).then((memberResults) => {
+          memberResults.forEach((result, i) => {
+            if (result.status === "rejected") {
+              const errMsg =
+                result.reason?.response?.data?.message || "Unknown error";
+              toast.error(`Could not add ${selectedEmails[i]}: ${errMsg}`);
+            }
+          });
+
+          const successCount = memberResults.filter(
+            (r) => r.status === "fulfilled"
+          ).length;
+
+          if (successCount > 0) {
+            toast.success(
+              `${successCount} member${successCount > 1 ? "s" : ""} added!`
+            );
+          }
+        });
       }
     } catch (error) {
-      console.log(error);
+      console.error("handleSubmit error:", error);
       toast.error(error.response?.data?.message || "Failed to create project");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  // const toggleTeamMember = (memberId) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     teamMembers: prev.teamMembers.includes(memberId)
-  //       ? prev.teamMembers.filter((id) => id !== memberId)
-  //       : [...prev.teamMembers, memberId],
-  //   }));
-  // };
+  // ─── Render ───────
 
   return (
     <motion.div
-      className=" fixed top-0 left-0 w-screen h-screen bg-[#000000BD] flex justify-center items-center py-7 z-50 font-['inter'] "
+      className="fixed top-0 left-0 w-screen h-screen bg-[#000000BD] flex justify-center items-center py-7 z-50 font-['inter']"
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 25,
-      }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
-      <div className=" bg-white  w-[52.64%] h-[99%] rounded-2xl p-10 overflow-auto [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:bg-gray-100 max-[1024px]:w-[80%] max-[600px]:w-[90%] max-[410px]:w-full max-[410px]:p-4">
-        <form className=" ">
-          <h1 className=" font-semibold text-[20px]">Create New Project</h1>
-          <span className=" w-full h-px bg-[#74747480] mt-[25px] block"></span>
-          <div className=" mt-[25px] ">
+      <div className="bg-white w-[52.64%] h-[99%] rounded-2xl p-10 overflow-auto [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:bg-gray-100 max-[1024px]:w-[80%] max-[600px]:w-[90%] max-[410px]:w-full max-[410px]:p-4">
+        <form onSubmit={handleSubmit}>
+          <h1 className="font-semibold text-[20px]">Create New Project</h1>
+          <span className="w-full h-px bg-[#74747480] mt-[25px] block" />
+
+          <div className="mt-[25px]">
+
+            {/* Project Title */}
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">
                 Project Title <span className="text-red-500">*</span>
@@ -188,18 +183,9 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                 value={formData.projectTitle}
                 onChange={(e) => {
                   const value = capitalizeWords(e.target.value);
-
-                  setFormData((prev) => ({
-                    ...prev,
-                     projectTitle: value,
-                  }));
-
-                  if (errors.projectTitle) {
-                    setErrors((prev) => ({
-                      ...prev,
-                      projectTitle: "",
-                    }));
-                  }
+                  setFormData((prev) => ({ ...prev, projectTitle: value }));
+                  if (errors.projectTitle)
+                    setErrors((prev) => ({ ...prev, projectTitle: "" }));
                 }}
                 placeholder="e.g., Website Redesign"
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 ${
@@ -210,18 +196,16 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                 <p className="text-red-500 text-sm mt-1">{errors.projectTitle}</p>
               )}
             </div>
+
             {/* Description */}
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">
-                Description
+                Description <span className="text-red-500">*</span>
               </label>
               <textarea
                 value={formData.description}
                 onChange={(e) => {
-                  setFormData({
-                    ...formData,
-                    description: e.target.value,
-                  });
+                  setFormData({ ...formData, description: e.target.value });
                   if (errors.description)
                     setErrors({ ...errors, description: "" });
                 }}
@@ -232,12 +216,11 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                 }`}
               />
               {errors.description && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.description}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.description}</p>
               )}
             </div>
 
+            {/* Color Picker */}
             <div className="mb-6">
               <label className="block text-sm font-medium mb-3">
                 Project Color
@@ -259,93 +242,118 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
               </div>
             </div>
 
+            {/* Invite by Email */}
             <div className="space-y-2 mb-6">
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-900"
               >
-                Email
+                Invite Team Members
               </label>
-              <div className="flex gap-3">
+              <div className="flex gap-3 max-[430px]:flex-col">
                 <input
                   type="email"
                   id="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onKeyUp={handleKeyPress}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (emailError) setEmailError("");
+                  }}
+                  onKeyUp={handleKeyUp}
                   placeholder="samirnasr99@gmail.com"
                   className="flex-1 px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-gray-400"
                 />
                 <button
-                  onClick={sendInvite} 
-                  type="button" 
-                  className="px-7 py-2.5 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 active:bg-green-800 transition-colors whitespace-nowrap"
+                  type="button"
+                  onClick={handleAddEmail}
+                  disabled={!email.trim()}
+                  className="px-7 py-2.5 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 active:bg-green-800 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Invite
+                  Add
                 </button>
               </div>
 
-              {message.text && (
-                <div
-                  className={`mt-3 p-3 rounded-md text-sm border ${
-                    message.type === "success"
-                      ? "bg-green-50 text-green-800 border-green-200"
-                      : "bg-red-50 text-red-800 border-red-200"
-                  }`}
-                >
-                  {message.text}
-                </div>
+              {emailError && (
+                <p className="text-sm text-red-500 mt-1">{emailError}</p>
               )}
             </div>
 
-            {/* Team Members */}
+            {/* Team Members List */}
             <div className="mb-6">
               <label className="block text-sm font-medium mb-3">
-                Team members
+                Team Members
               </label>
               <div className="border border-gray-300 rounded-lg p-4 space-y-3 min-h-[83px]">
-                {/* {teamMembersList.map((member) => (
-                  <label
-                    key={member.id}
-                    className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={formData.teamMembers.includes(member.id)}
-                      onChange={() => toggleTeamMember(member.id)}
-                      className="w-5 h-5 text-green-600 rounded focus:ring-2 focus:ring-green-500"
-                    />
-                    <div className="text-2xl">{member.avatar}</div>
-                    <div className="flex-1 ">
-                      <div className="font-medium">{member.name}</div>
-                      <div className="text-sm text-gray-500 ">
-                        {member.email}
+                {invitedEmails.length === 0 ? (
+                  <p className="text-sm text-gray-400 text-center mt-2">
+                    Added emails will appear here
+                  </p>
+                ) : (
+                  invitedEmails.map((member) => (
+                    <div
+                      key={member.email}
+                      className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded transition group"
+                    >
+                      <input
+                        type="checkbox"
+                        id={`member-${member.email}`}
+                        checked={member.checked}
+                        onChange={() => toggleMember(member.email)}
+                        className="w-5 h-5 text-green-600 rounded border-gray-300 focus:ring-2 focus:ring-green-500 cursor-pointer"
+                      />
+                      {/* Avatar initial */}
+                      <div className="w-8 h-8 rounded-full bg-green-100 text-green-700 text-xs font-semibold flex items-center justify-center uppercase shrink-0">
+                        {member.email[0]}
                       </div>
+                      <label
+                        htmlFor={`member-${member.email}`}
+                        className="flex-1 text-sm cursor-pointer text-gray-800"
+                      >
+                        {member.email}
+                      </label>
+                      {/* Remove — visible on hover */}
+                      <button
+                        type="button"
+                        onClick={() => removeMember(member.email)}
+                        className="text-gray-300 hover:text-red-500 transition opacity-0 group-hover:opacity-100"
+                        title="Remove"
+                      >
+                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
                     </div>
-                  </label>
-                ))} */}
+                  ))
+                )}
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                {formData.teamMembers.length} member
-                {formData.teamMembers.length !== 1 ? "s" : ""} selected
+                {selectedCount} member{selectedCount !== 1 ? "s" : ""} selected
               </p>
             </div>
+
+            {/* Actions */}
             <div className="flex gap-3 max-[500px]:flex-col">
               <button
                 type="button"
                 onClick={closeModal}
-                className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+                disabled={isSubmitting}
+                className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
-                type="button"
-                onClick={handleSubmit}
-                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
+                type="submit"
+                disabled={isSubmitting}
+                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                + Create Project
+                {isSubmitting ? "Creating…" : "+ Create Project"}
               </button>
             </div>
+
           </div>
         </form>
       </div>

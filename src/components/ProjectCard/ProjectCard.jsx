@@ -26,7 +26,7 @@ const ProjectCard = ({ project }) => {
   };
 
   const handleCardClick = () => {
-    console.log("🔍 Navigating to project ID:", project._id);
+    console.log(" Navigating to project ID:", project._id);
     navigate(`/dashboard/projects/${project._id}`);
   };
 
@@ -41,7 +41,7 @@ const ProjectCard = ({ project }) => {
             className=" size-[19px] block rounded-[50%] "
             style={{ backgroundColor: project.color || "#10B981" }}
           ></span>
-          <div className="relative group max-w-[200px] max-[500px]:w-full">
+          <div className="relative group max-w-[170px] max-[500px]:w-full">
             <h3 className="truncate font-normal text-[16px] w-full">
               {project.projectTitle}
             </h3>
@@ -96,8 +96,8 @@ const ProjectCard = ({ project }) => {
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold mb-2">Delete Project</h3>
                   <p className="text-gray-600 mb-4">
-                    Are you sure you want to delete "{project.projectTitle}"?
-                    This action cannot be undone.
+                    Move "{project.projectTitle}" to the Recycle Bin?
+                    It will be permanently deleted after 30 days.
                   </p>
                 </div>
               </div>

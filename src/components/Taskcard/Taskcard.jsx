@@ -19,8 +19,8 @@ const TaskCard = ({ task, boardId }) => {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-      transition: transition || "transform 200ms ease", // Add smooth transition
-    opacity: isDragging ? 0.5 : 1, // Make original semi-transparent while dragging
+      transition: transition || "transform 200ms ease", 
+    opacity: isDragging ? 0.5 : 1, 
   };
 
   return (
@@ -33,7 +33,7 @@ const TaskCard = ({ task, boardId }) => {
     >
       <p className="font-medium truncate">{task.title}</p>
       <p className="text-xs text-gray-400 mt-1">
-        {new Date(task.createdAt).toLocaleString()}
+        {task.dueDate ? `Due: ${new Date(task.dueDate).toLocaleDateString()}` : "No due date"}
       </p>
     </div>
   );
