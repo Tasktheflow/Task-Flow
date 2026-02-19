@@ -10,6 +10,7 @@ import { IoMdCheckboxOutline } from "react-icons/io";
 import { IoMdCalendar } from "react-icons/io";
 import { Users } from "lucide-react";
 import ScrollToTopContainer from "../../components/ScrollToTopContainer";
+import { IoTrashBinOutline } from "react-icons/io5";
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -104,7 +105,7 @@ const Dashboard = () => {
               <span className="font-medium ">Calender</span>
             </NavLink>
             <NavLink
-              to="inbox"
+              to="Recyclebin"
               className={({ isActive }) =>
                 `rounded-2xl flex items-center gap-[21px] pl-[25px] py-[17.5px] transition
      ${
@@ -112,8 +113,8 @@ const Dashboard = () => {
      }`
               }
             >
-              <TbMailFilled size={24} />
-              <span className="font-medium ">Inbox</span>
+              <IoTrashBinOutline size={24} />
+              <span className="font-medium ">Recycle Bin</span>
             </NavLink>
             <NavLink
               to="settings"
@@ -147,7 +148,7 @@ const Dashboard = () => {
 
         {/* Different pages showcase */}
 
-        <div id="dashboard-scroll" className="  flex-1 overflow-y-auto">
+        <div id="dashboard-scroll" className="  flex-1 overflow-y-auto ">
           <div className="w-full ">
             <ScrollToTopContainer />
             <Outlet />

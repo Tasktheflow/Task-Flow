@@ -7,7 +7,7 @@ const Dropdown = ({ label, value, options, onChange, required }) => {
 
   return (
     <div className="relative">
-      <label className="text-[20px] font-normal">
+      <label className="text-[20px] font-normal max-[500px]:text-[16px]">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
 

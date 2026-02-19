@@ -35,7 +35,7 @@ const ProjectDetails = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Drag must move 8px to activate
+        distance: 8,
       },
     }),
   );
@@ -43,7 +43,6 @@ const ProjectDetails = () => {
   const handleDragStart = (event) => {
     const { active } = event;
 
-    // Find the task being dragged
     for (const board of boards) {
       const task = board.tasks.find((t) => t.id === active.id);
       if (task) {
@@ -54,7 +53,7 @@ const ProjectDetails = () => {
   };
 
   const handleDragEnd = ({ active, over }) => {
-    setActiveTask(null); // Clear active task
+    setActiveTask(null);
 
     if (!over) return;
 
@@ -136,17 +135,17 @@ const ProjectDetails = () => {
   const addTask = (task) => {
     setBoards((prevBoards) =>
       prevBoards.map((board) =>
-        board.id === task.status // status comes from modal dropdown
+        board.id === task.status
           ? { ...board, tasks: [...board.tasks, task] }
           : board,
       ),
     );
   };
 
- const project = projects?.find((p) => p._id === projectId);
+  const project = projects?.find((p) => p._id === projectId);
 
   if (!project) {
-    return <p>Project not found</p>;
+    return <p className=" p-3">getting project details...</p>;
   }
 
   return (
@@ -159,7 +158,9 @@ const ProjectDetails = () => {
     >
       <header className=" px-[57px] flex items-center w-full justify-between border-b border-[#A1A3AB4D] pb-[25px] max-[1250px]:px-3 max-[500px]:pb-2.5 max-[460px]:flex-col max-[460px]:items-start max-[460px]:gap-2">
         <div>
-          <div className=" flex gap-7 max-[800px]:gap-2 max-[460px]:gap-10">
+          <div
+            className=" flex gap-7 max-[800px]:gap-2 max-[460px]:gap-10 max-[400px]:gap-4 max-[400px]:justify-between max-[400px]:w-full"
+          >
             <button onClick={() => navigate(-1)}>
               <IoArrowBackOutline size={24} className=" font-light" />
             </button>
@@ -167,23 +168,26 @@ const ProjectDetails = () => {
               {" "}
               <span
                 className=" size-[19px] block rounded-[50%] "
-                 style={{ backgroundColor: project.color || '#10B981' }}
+                style={{ backgroundColor: project.color || "#10B981" }}
               ></span>
-              <h2 className="text-[20px] font-light ">{project.projectTitle}</h2>
+              <h2 className="text-[20px] font-light ">
+                {project.projectTitle}
+              </h2>
             </div>
           </div>
           {/* <p className="mt-2 text-gray-600">{project.description}</p> */}
         </div>
-        <div className=" flex gap-[17px] items-center max-[550px]:text-[12px] max-[550px]:gap-1.5">
+        <div className=" flex gap-[17px] items-center max-[550px]:text-[12px] max-[550px]:gap-1.5 max-[400px]:w-full max-[400px]:justify-between max-[284px]:flex-col  max-[284px]:gap-2.5">
           <button
-            className=" flex items-center justify-center bg-[#05A301] px-5 py-2.5 rounded-lg gap-2.5 text-white cursor-pointer"
+            className=" flex items-center justify-center bg-[#05A301] px-5 py-2.5 rounded-lg gap-2.5 text-white cursor-pointer max-[284px]:px-3 max-[284px]:py-2 max-[284px]:w-full max-[284px]:justify-center"
             onClick={() => setShowTaskModal(true)}
           >
             {" "}
-            <span className=" text-[16px] max-[550px]:text-[12px]">+</span>Add Task
+            <span className=" text-[16px] max-[550px]:text-[12px]">+</span>Add
+            Task
           </button>
           <button
-            className=" flex items-center justify-center px-5 py-2.5 bg-transparent border border-[#05A301] text-[#05A301] text-[15px] font-medium rounded-lg gap-[7px] cursor-pointer max-[550px]:px-2 max-[550px]:py-1.5"
+            className=" flex items-center justify-center px-5 py-2.5 bg-transparent border border-[#05A301] text-[#05A301] text-[15px] font-medium rounded-lg gap-[7px] cursor-pointer max-[550px]:px-2 max-[550px]:py-1.5 max-[284px]:px-1 max-[284px]:py-1 max-[284px]:w-full max-[284px]:justify-center"
             onClick={() => setShowInviteModal(true)}
           >
             <MdGroupAdd className=" size-[19.5px]" />
@@ -223,6 +227,7 @@ const ProjectDetails = () => {
         <CreateTaskModal
           onClose={() => setShowTaskModal(false)}
           onCreate={addTask}
+          projectId={projectId}
         />
       )}
 

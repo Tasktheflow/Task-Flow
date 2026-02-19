@@ -14,7 +14,7 @@ const PostProjectCreation = () => {
     projects: projects.length,
   };
   return (
-    <div className=" bg-[url('/src/assets/dashbg.png')] pt-[62px] h-screen px-[54px] max-[500px]:px-3.5">
+    <div className=" bg-[url('/src/assets/dashbg.png')] pt-[62px] h-screen px-[54px] max-[500px]:px-3.5 max-[500px]:pt-3">
         <div className=" mb-[30px] font-['inter']">
             <h1 className=" text-[24px] font-medium">Welcome back, {user?.username} <span className=" size-[42px]">👋</span></h1>
             <p className=" text-[20px] font-light">You have 0 tasks to complete today</p>

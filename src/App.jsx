@@ -7,8 +7,9 @@ import SigninPage from "../src/pages/SigninPage/Signinpage";
 import Dashboard from "../src/pages/Dashboard/Dashboard";
 import DashHome from "./pages/Dashboard/DashHome";
 import Projects from "./pages/Projects/Projects";
-import Inbox from "./pages/Inbox/Inbox";
+import Recyclebin from "./pages/Recyclebin/Recyclebin";
 import Calender from "./pages/Calender/Calender";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import Settings from "./pages/Settings/Settings";
 import { ProjectsProvider } from "./components/Contexts/ProjectsContext";
 import ScrollToTop from "./components/ScrollToTop";
@@ -33,7 +34,7 @@ function App() {
               <Route path=":projectId" element={<ProjectDetails />} />
             </Route>
 
-            <Route path="inbox" element={<Inbox />} />
+            <Route path="recyclebin" element={<Recyclebin />} />
             <Route path="calender" element={<Calender />} />
             <Route path="settings" element={<Settings />} />
           </Route>

@@ -1,50 +1,59 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { inviteMember } from "../../services/authService";
+import { toast } from "react-toastify";
 
 const InviteMemberModal = ({ onClose, projectId }) => {
   const [email, setEmail] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
   const [sendSuccess, setSendSuccess] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
-  // Generate project link 
-  const projectLink = `${window.location.origin}/project/${projectId}`;
+  // Generate project link - trim projectId and ensure it's not empty
+  const projectLink = projectId && projectId.toString().trim() 
+    ? `${window.location.origin}/dashboard/projects/${projectId.toString().trim()}` 
+    : "";
 
-  const handleSendInvite = (e) => {
+  const handleSendInvite = async (e) => {
     e.preventDefault();
 
     if (!email.trim()) {
-      alert("Please enter an email address");
+      toast.error("Please enter an email address");
       return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address");
+      toast.error("Please enter a valid email address");
       return;
     }
 
-    // Here i would make an API call to send the invitation
-    // For now,i just simulate it
-    console.log("Sending invite to:", email);
-    console.log("Project link:", projectLink);
+    if (!projectId) {
+      toast.error("Project ID is missing");
+      return;
+    }
 
-    // Show success message
-    setSendSuccess(true);
-    setTimeout(() => {
-      setSendSuccess(false);
+    try {
+      setIsSending(true);
+      const res = await inviteMember(projectId.toString().trim(), email.trim());
+      setSendSuccess(true);
       setEmail("");
-    }, 2000);
-
-    // In a real implementation:
-    // await fetch('/api/send-invite', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email, projectLink, projectId })
-    // });
+      setTimeout(() => setSendSuccess(false), 2000);
+    } catch (err) {
+      console.error("Invite failed:", err);
+      const message = err?.response?.data?.message || err.message || "Failed to send invite";
+      toast.error(message);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleCopyLink = () => {
+    if (!projectLink) {
+      toast.error("Project link is not available");
+      return;
+    }
     navigator.clipboard
       .writeText(projectLink)
       .then(() => {
@@ -53,7 +62,7 @@ const InviteMemberModal = ({ onClose, projectId }) => {
       })
       .catch((err) => {
         console.error("Failed to copy:", err);
-        alert("Failed to copy link");
+        toast.error("Failed to copy link");
       });
   };
 
@@ -95,9 +104,14 @@ const InviteMemberModal = ({ onClose, projectId }) => {
             />
             <button
               type="submit"
-              className="bg-[#05A301] text-white px-6 py-2.5 rounded-lg text-[12px] font-medium hover:bg-[#048f01] transition-colors"
+              disabled={isSending}
+              className={`px-6 py-2.5 rounded-lg text-[12px] font-medium transition-colors ${
+                isSending
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-[#05A301] text-white hover:bg-[#048f01]"
+              }`}
             >
-              {sendSuccess ? "Sent!" : "Send Invite"}
+              {isSending ? "Sending..." : sendSuccess ? "Sent!" : "Send Invite"}
             </button>
           </div>
           {sendSuccess && (
@@ -121,14 +135,24 @@ const InviteMemberModal = ({ onClose, projectId }) => {
             />
             <button
               onClick={handleCopyLink}
-              className="bg-[#05A301] text-white px-6 py-2.5 rounded-lg text-[12px] font-medium hover:bg-[#048f01] transition-colors min-w-[110px]"
+              disabled={!projectLink}
+              className={`text-white px-6 py-2.5 rounded-lg text-[12px] font-medium transition-colors min-w-[110px] ${
+                projectLink
+                  ? "bg-[#05A301] hover:bg-[#048f01] cursor-pointer"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
             >
-              {copySuccess ? "Copied! ✓" : "Copy Link"}
+              {copySuccess ? "Copied!" : "Copy Link"}
             </button>
           </div>
           {copySuccess && (
             <p className="text-green-600 text-sm mt-2">
               Link copied to clipboard!
+            </p>
+          )}
+          {!projectLink && (
+            <p className="text-red-600 text-sm mt-2">
+              Project link is not available
             </p>
           )}
         </div>

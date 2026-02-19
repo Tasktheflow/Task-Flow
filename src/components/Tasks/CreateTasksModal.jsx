@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Dropdown from "../Ui/Dropdown";
+import { toast } from "react-toastify";
+import { createTasks } from "../../services/authService";
 
-const CreateTaskModal = ({ onClose, onCreate }) => {
+const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    status: "",
+    status: "todo",
     priority: "",
-    assignee: "",
+    assignedTo: "",
     dueDate: "",
+    startDate: "",
     personal: false,
   });
 
@@ -27,25 +30,39 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
     const newErrors = {};
 
     if (!form.title.trim()) newErrors.title = "Task title is required";
-    if (!form.status) newErrors.status = "Status is required";
     if (!form.priority) newErrors.priority = "Priority is required";
+    if (!form.startDate) newErrors.startDate = "Start date is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validate()) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!validate()) return;
 
-    onCreate({
-      ...form,
-      id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`, // ADD THIS LINE
-      createdAt: new Date().toISOString(),
-    });
+  try {
+    const newTask = await createTasks({ ...form, projectId });
+
+    const formattedTask = {
+  ...newTask.data,
+  id: newTask.data.id,
+  status: "todo",   
+};
+
+  console.log("Created Task:", formattedTask);
+    onCreate(formattedTask); 
+
+    toast.success("Task created successfully!");
 
     onClose();
-  };
+  } catch (error) {
+    console.error("Error creating task:", error);
+    toast.error(
+      error.response?.data?.message || "Failed to create task"
+    );
+  }
+};
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 font-['inter']">
@@ -61,7 +78,7 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Task Title */}
           <div>
-            <label className="text-[20px] font-normal">
+            <label className="text-[20px] font-normal max-[500px]:text-[16px]">
               Task Title <span className="text-red-500">*</span>
             </label>
             <input
@@ -69,7 +86,7 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
               value={form.title}
               onChange={handleChange}
               placeholder="e.g. Design website dashboard"
-              className="w-full mt-1 border rounded-lg px-3 py-[18.5px] pl-6 text-[18px] border-[#A1A3AB] placeholder:text-[20px] max-[400px]:px-1.5"
+              className="w-full mt-1 border rounded-lg px-3 py-[18.5px] pl-6 text-[18px] border-[#A1A3AB] placeholder:text-[20px] max-[400px]:px-1.5 max-[500px]:placeholder:text-[16px] max-[500px]:py-3"
             />
             {errors.title && (
               <p className="text-xs text-red-500 mt-1">{errors.title}</p>
@@ -78,39 +95,32 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
 
           {/* Description */}
           <div>
-            <label className="text-[20px]  font-normal">Description</label>
+            <label className="text-[20px]  font-normal max-[500px]:text-[16px]">Description</label>
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
               placeholder="What is this task about?"
-              className="w-full mt-1 border rounded-lg px-6 py-4 text-[18px] min-h-[190px] border-[#A1A3AB] placeholder:text-[20px] max-[350px]:px-1.5"
+              className="w-full mt-1 border rounded-lg px-6 py-4 text-[18px] min-h-[190px] border-[#A1A3AB] placeholder:text-[20px] max-[350px]:px-1.5  max-[500px]:placeholder:text-[16px]"
             />
           </div>
 
           {/* Status + Priority */}
           <div className="grid grid-cols-2 gap-3 max-[490px]:grid-cols-1">
             <div>
-              <Dropdown
-                label="Status"
-                required
-                value={form.status}
-                onChange={(value) => {
-                  setForm((prev) => ({ ...prev, status: value }));
-                  if (errors.status) {
-                    setErrors((prev) => ({ ...prev, status: "" }));
-                  }
-                }}
-                options={[
-                  { label: "To-Do", value: "todo" },
-                  { label: "In Progress", value: "progress" },
-                  { label: "Review", value: "review" },
-                  { label: "Done", value: "done" },
-                ]}
+              <label className="text-[20px] font-normal max-[500px]:text-[16px]">
+                Due Date
+                <span className="text-red-500 pl-1">*</span>
+              </label>
+              <input
+                type="date"
+                name="startDate"
+                value={form.startDate}
+                onChange={handleChange}
+                className="w-full mt-1 border rounded-lg px-6 py-[18.5px] text-[16px]  border-[#A1A3AB]"
               />
-
-              {errors.status && (
-                <p className="text-red-500 text-xs mt-1">{errors.status}</p>
+              {errors.startDate && (
+                <p className="text-red-500 text-xs mt-1">{errors.startDate}</p>
               )}
             </div>
 
@@ -126,9 +136,9 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
                   }
                 }}
                 options={[
-                  { label: "Low", value: "low" },
-                  { label: "Medium", value: "medium" },
-                  { label: "High", value: "high" },
+                  { label: "Low", value: "Low" },
+                  { label: "Medium", value: "Medium" },
+                  { label: "High", value: "High" },
                 ]}
               />
               {errors.priority && (
@@ -153,7 +163,7 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
             />
 
             <div>
-              <label className="text-[20px] font-normal">Due Date</label>
+              <label className="text-[20px] font-normal max-[500px]:text-[16px]">Due Date</label>
               <input
                 type="date"
                 name="dueDate"
@@ -165,7 +175,7 @@ const CreateTaskModal = ({ onClose, onCreate }) => {
           </div>
 
           {/* Personal */}
-          <label className="flex items-center gap-2 text-[16px]">
+          <label className="flex items-center gap-2 text-[16px] max-[500px]:text-[12px]">
             <input
               type="checkbox"
               name="personal"
