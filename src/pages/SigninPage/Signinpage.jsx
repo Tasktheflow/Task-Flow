@@ -8,6 +8,7 @@ import { loginUser } from "../../services/authService";
 import { toast } from "react-toastify";
 import LoadingButton from "../../components/loadingButton/LoadingButton";
 import google from "../../assets/FB.png";
+import { useProjects } from "../../components/Contexts/ProjectsContext";
 
 const Signinpage = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ const Signinpage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const { fetchProjects } = useProjects();
 
   const navigate = useNavigate();
   // Handle input changes
@@ -64,6 +66,7 @@ const Signinpage = () => {
         toast.success(res.message);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         localStorage.setItem("token", res.data.token);
+        await fetchProjects();
         navigate("/dashboard");
       } else {
         toast.error(res.message);

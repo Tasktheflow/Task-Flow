@@ -85,8 +85,8 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
   const toggleMember = (targetEmail) => {
     setInvitedEmails((prev) =>
       prev.map((m) =>
-        m.email === targetEmail ? { ...m, checked: !m.checked } : m
-      )
+        m.email === targetEmail ? { ...m, checked: !m.checked } : m,
+      ),
     );
   };
 
@@ -124,27 +124,23 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
         .filter((m) => m.checked)
         .map((m) => m.email);
 
-        console.log("projectId:", projectId, "emails:", selectedEmails)
+      console.log("projectId:", projectId, "emails:", selectedEmails);
 
-      if (projectId && selectedEmails.length > 0) {
+      if (selectedEmails.length > 0) {
         Promise.allSettled(
-          selectedEmails.map((memberEmail) => addMember(projectId, memberEmail))
-        ).then((memberResults) => {
-          memberResults.forEach((result, i) => {
+          selectedEmails.map((email) => sendInvitation(email, projectId)),
+        ).then((results) => {
+          results.forEach((result, i) => {
             if (result.status === "rejected") {
-              const errMsg =
-                result.reason?.response?.data?.message || "Unknown error";
-              toast.error(`Could not add ${selectedEmails[i]}: ${errMsg}`);
+              toast.error(`Could not invite ${selectedEmails[i]}`);
             }
           });
-
-          const successCount = memberResults.filter(
-            (r) => r.status === "fulfilled"
+          const successCount = results.filter(
+            (r) => r.status === "fulfilled",
           ).length;
-
           if (successCount > 0) {
             toast.success(
-              `${successCount} member${successCount > 1 ? "s" : ""} added!`
+              `${successCount} invite${successCount > 1 ? "s" : ""} sent!`,
             );
           }
         });
@@ -172,7 +168,6 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
           <span className="w-full h-px bg-[#74747480] mt-[25px] block" />
 
           <div className="mt-[25px]">
-
             {/* Project Title */}
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">
@@ -193,7 +188,9 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                 }`}
               />
               {errors.projectTitle && (
-                <p className="text-red-500 text-sm mt-1">{errors.projectTitle}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.projectTitle}
+                </p>
               )}
             </div>
 
@@ -216,7 +213,9 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                 }`}
               />
               {errors.description && (
-                <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description}
+                </p>
               )}
             </div>
 
@@ -318,7 +317,11 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                         className="text-gray-300 hover:text-red-500 transition opacity-0 group-hover:opacity-100"
                         title="Remove"
                       >
-                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                        <svg
+                          className="h-4 w-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
                           <path
                             fillRule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -353,7 +356,6 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                 {isSubmitting ? "Creating…" : "+ Create Project"}
               </button>
             </div>
-
           </div>
         </form>
       </div>
