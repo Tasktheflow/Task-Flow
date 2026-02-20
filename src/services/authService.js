@@ -10,6 +10,13 @@ export const loginUser = async (formData) => {
   return response.data;
 };
 
+export const getUserProfile = async () => {
+  const response = await api.get("/api/users/profile");
+  return response.data;
+};
+
+
+
 export const createProject = async (formData) => {
   const response = await api.post("/api/projects", formData);
   return response.data;
@@ -102,5 +109,16 @@ export const getDeletedTasks = async () => {
 
 export const getMyNotifications = async () => {
   const response = await api.get("/api/getMyNotifications");
+  return response.data;
+};
+
+
+export const sendInvitation = async (email, projectId) => {
+  const response = await api.post("/api/invitations", { email, projectId });
+  return response.data;
+};
+
+export const acceptInvitation = async (token) => {
+  const response = await api.post("/api/invitations/accept", { token });
   return response.data;
 };

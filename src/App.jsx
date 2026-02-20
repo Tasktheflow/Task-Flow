@@ -14,7 +14,8 @@ import Settings from "./pages/Settings/Settings";
 import { ProjectsProvider } from "./components/Contexts/ProjectsContext";
 import ScrollToTop from "./components/ScrollToTop";
 import ProjectDetails from "./pages/Projects/ProjectDetails";
- import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
+import Acceptinvitepage from "./pages/Acceptinvitepage/Acceptinvitepage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -38,6 +39,7 @@ function App() {
             <Route path="calender" element={<Calender />} />
             <Route path="settings" element={<Settings />} />
           </Route>
+          <Route path="/invite/accept" element={<Acceptinvitepage />} />
         </Routes>
       </ProjectsProvider>
     </div>
