@@ -5,7 +5,7 @@ import { MdGroupAdd } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import CreateTaskModal from "../../components/Tasks/CreateTasksModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -16,6 +16,7 @@ import {
 } from "@dnd-kit/core";
 import Board from "../../components/Board/Board";
 import InviteMemberModal from "../../components/InviteMembers/InviteMemberModal";
+import { getTasks } from "../../services/authService";
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -31,6 +32,27 @@ const ProjectDetails = () => {
     { id: "review", title: "Review", tasks: [] },
     { id: "done", title: "Done", tasks: [] },
   ]);
+useEffect(() => {
+  async function loadTasks() {
+    try {
+      const response = await getTasks(projectId);
+      const tasks = response.data; 
+
+      setBoards((prevBoards) =>
+        prevBoards.map((board) => ({
+          ...board,
+          tasks: tasks.filter(
+            (task) => task.status.toLowerCase() === board.id 
+          ),
+        }))
+      );
+    } catch (err) {
+      console.error("Failed to load tasks:", err);
+    }
+  }
+
+  if (projectId) loadTasks();
+}, [projectId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

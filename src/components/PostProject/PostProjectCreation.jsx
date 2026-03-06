@@ -1,6 +1,7 @@
 import React from "react";
 import StatsCards from "../DashStatsCards/StatsCards";
 import { useProjects } from "../Contexts/ProjectsContext";
+import proimage from "../../assets/productivity.png";
 
 const PostProjectCreation = () => {
   const { projects } = useProjects();
@@ -18,6 +19,9 @@ const PostProjectCreation = () => {
         <div className=" mb-[30px] font-['inter']">
             <h1 className=" text-[24px] font-medium">Welcome back, {user?.username} <span className=" size-[42px]">👋</span></h1>
             <p className=" text-[20px] font-light">You have 0 tasks to complete today</p>
+        </div>
+        <div>
+          {/* <img src={proimage} alt="Productivity" className=" h-[300px] w-[70%]"/> */}
         </div>
       <StatsCards stats={stats} />
     </div>
