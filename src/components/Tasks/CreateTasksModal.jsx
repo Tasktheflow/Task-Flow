@@ -78,7 +78,7 @@ const handleSubmit = async (e) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Task Title */}
           <div>
-            <label className="text-[20px] font-normal max-[500px]:text-[16px]">
+            <label className="text-[16px] font-normal max-[500px]:text-[14px]">
               Task Title <span className="text-red-500">*</span>
             </label>
             <input
@@ -86,7 +86,7 @@ const handleSubmit = async (e) => {
               value={form.title}
               onChange={handleChange}
               placeholder="e.g. Design website dashboard"
-              className="w-full mt-1 border rounded-lg px-3 py-[18.5px] pl-6 text-[18px] border-[#A1A3AB] placeholder:text-[20px] max-[400px]:px-1.5 max-[500px]:placeholder:text-[16px] max-[500px]:py-3"
+              className="w-full mt-1 border rounded-lg px-3 py-[18.5px] pl-6 text-[18px] border-[#A1A3AB] placeholder:text-[16px] max-[400px]:px-1.5 max-[500px]:placeholder:text-[16px] max-[500px]:py-3"
             />
             {errors.title && (
               <p className="text-xs text-red-500 mt-1">{errors.title}</p>
@@ -95,21 +95,21 @@ const handleSubmit = async (e) => {
 
           {/* Description */}
           <div>
-            <label className="text-[20px]  font-normal max-[500px]:text-[16px]">Description</label>
+            <label className="text-[16px]  font-normal max-[500px]:text-[14px]">Description</label>
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
               placeholder="What is this task about?"
-              className="w-full mt-1 border rounded-lg px-6 py-4 text-[18px] min-h-[190px] border-[#A1A3AB] placeholder:text-[20px] max-[350px]:px-1.5  max-[500px]:placeholder:text-[16px]"
+              className="w-full mt-1 border rounded-lg px-6 py-4 text-[18px] min-h-[190px] border-[#A1A3AB] placeholder:text-[16px] max-[350px]:px-1.5  max-[500px]:placeholder:text-[16px]"
             />
           </div>
 
-          {/* Status + Priority */}
+          {/* Start Date + Priority */}
           <div className="grid grid-cols-2 gap-3 max-[490px]:grid-cols-1">
             <div>
-              <label className="text-[20px] font-normal max-[500px]:text-[16px]">
-                Due Date
+              <label className="text-[16px] font-normal max-[500px]:text-[14px]">
+                Start Date
                 <span className="text-red-500 pl-1">*</span>
               </label>
               <input
@@ -163,7 +163,7 @@ const handleSubmit = async (e) => {
             />
 
             <div>
-              <label className="text-[20px] font-normal max-[500px]:text-[16px]">Due Date</label>
+              <label className="text-[16px] font-normal max-[500px]:text-[14px]">Due Date</label>
               <input
                 type="date"
                 name="dueDate"
@@ -190,7 +190,7 @@ const handleSubmit = async (e) => {
             <button
               type="button"
               onClick={onClose}
-              className="w-[247px] py-2 border rounded-lg text-[15px] text-green-600 max-[325px]:w-full"
+              className="w-[247px] py-2 border rounded-lg text-[15px] text-green-600 max-[325px]:w-full max-[325px]:mb-10"
             >
               Cancel
             </button>

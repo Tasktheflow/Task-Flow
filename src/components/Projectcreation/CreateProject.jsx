@@ -224,7 +224,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
               <label className="block text-sm font-medium mb-3">
                 Project Color
               </label>
-              <div className="flex gap-3 max-[505px]:grid max-[505px]:grid-cols-4 max-[505px]:gap-2.5">
+              <div className="flex gap-3 max-[505px]:grid max-[505px]:grid-cols-4 max-[505px]:gap-2.5 max-[280px]:grid-cols-3">
                 {colors.map((color) => (
                   <button
                     key={color}
@@ -260,7 +260,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
                   }}
                   onKeyUp={handleKeyUp}
                   placeholder="samirnasr99@gmail.com"
-                  className="flex-1 px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-gray-400"
+                  className="flex-1 px-4 py-2.5 text-[16px] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent placeholder-gray-400"
                 />
                 <button
                   type="button"
@@ -351,7 +351,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed max-[500px]:mb-10"
               >
                 {isSubmitting ? "Creating…" : "+ Create Project"}
               </button>

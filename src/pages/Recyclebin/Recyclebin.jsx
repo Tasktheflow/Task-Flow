@@ -105,7 +105,7 @@ const ConfirmDialog = ({ item, onConfirm, onCancel }) => (
   </motion.div>
 );
 
-// ─── Project Card ─────────────────────────────────────────────────────────────
+// ─── Project Card ─────
 const ProjectCard = ({ project, onRestore, onDelete, isOwner }) => (
   <motion.div
     layout
@@ -126,7 +126,7 @@ const ProjectCard = ({ project, onRestore, onDelete, isOwner }) => (
         <p className="text-sm font-medium text-gray-500 line-through truncate">
           {project.projectTitle}
         </p>
-        <p className="text-xs text-gray-400 mt-0.5 truncate max-[700px]:w-[300px]">
+        <p className="text-xs text-gray-400 mt-0.5 truncate max-w-[500px] max-[700px]:w-[300px] max-[350px]:w-[100px]">
           {project.description}
         </p>
       </div>
