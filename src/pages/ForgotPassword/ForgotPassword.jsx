@@ -134,7 +134,7 @@ export default function ForgotPassword() {
               Didn't receive it?{" "}
               <button
                 onClick={() => { setStatus("idle"); setEmail(""); }}
-                className="text-[#6b8c5a] font-bold underline hover:text-[#5a7a4a] transition-colors"
+                className="text-[#05A301] font-bold underline hover:text-[#5a7a4a] transition-colors"
               >
                 Try again
               </button>
