@@ -198,28 +198,6 @@ export default function ResetPassword() {
               >
                 <EyeIcon open={showNew} />
               </button>
-
-              {/* Password strength bar */}
-              {/* {newPassword.length > 0 && strength && (
-                <div className="mt-2 space-y-1">
-                  <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-300 ${strength.color} ${strength.width}`}
-                    />
-                  </div>
-                  <p
-                    className={`text-xs font-semibold ${
-                      strength.label === "Strong"
-                        ? "text-[#6b8c5a]"
-                        : strength.label === "Fair"
-                          ? "text-yellow-500"
-                          : "text-red-400"
-                    }`}
-                  >
-                    {strength.label}
-                  </p>
-                </div>
-              )} */}
             </div>
 
             {/* ── Confirm Password ── */}
@@ -275,7 +253,7 @@ export default function ResetPassword() {
             <button
               onClick={handleSubmit}
               disabled={status === "loading"}
-              className="w-full py-4 rounded-xl bg-[#6b8c5a] hover:bg-[#5a7a4a] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold text-base tracking-wide transition-all duration-200"
+              className="w-full py-4 rounded-xl bg-[#05A301] hover:bg-[#50a824] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold text-base tracking-wide transition-all duration-200"
             >
               {status === "loading" ? (
                 <span className="flex items-center justify-center gap-2">
@@ -331,8 +309,8 @@ export default function ResetPassword() {
               with your new password.
             </p>
             <button
-              onClick={() => navigate("/login")}
-              className="mt-2 w-full py-4 rounded-xl bg-[#6b8c5a] hover:bg-[#5a7a4a] text-white font-bold text-base transition-all duration-200"
+              onClick={() => navigate("/Signin")}
+              className="mt-2 w-full py-4 rounded-xl bg-[#05A301] hover:bg-[#50a824] text-white font-bold text-base transition-all duration-200"
             >
               Go to Login
             </button>
