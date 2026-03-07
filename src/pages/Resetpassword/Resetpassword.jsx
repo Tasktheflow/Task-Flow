@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import resetpic from "../../assets/reset.png";
+import api from "../../api/base";
 
-const BASE_URL = "https://task-flow-g8s6.vercel.app";
 
 const EyeIcon = ({ open }) =>
   open ? (
@@ -66,40 +66,19 @@ export default function ResetPassword() {
 
     setStatus("loading");
     setErrorMsg("");
-
-    try {
-      const response = await fetch(`${BASE_URL}/api/auth/reset-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, newPassword, confirmPassword }),
-      });
-
-      const contentType = response.headers.get("content-type");
-      const data = contentType?.includes("application/json")
-        ? await response.json()
-        : null;
-
-      if (response.ok) {
-        setStatus("success");
-      } else {
-        setErrorMsg(
-          data?.message ||
-          data?.error ||
-          `Request failed with status ${response.status}.`
-        );
-        setStatus("error");
-      }
+   try {
+      await api.post("/api/auth/reset-password", { token, newPassword, confirmPassword });
+      setStatus("success");
     } catch (err) {
-      console.error("[ResetPassword] Fetch error:", err);
-      setErrorMsg(
-        err instanceof TypeError && err.message === "Failed to fetch"
-          ? "Unable to reach the server. Check your connection or CORS settings."
-          : `Unexpected error: ${err.message}`
-      );
+      console.error("[ResetPassword] Error:", err);
+      const message =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "Something went wrong. Please try again.";
+      setErrorMsg(message);
       setStatus("error");
     }
   };
-
   // ── Invalid / missing token screen ──
   if (!token) {
     return (

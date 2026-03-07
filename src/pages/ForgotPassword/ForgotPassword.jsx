@@ -1,7 +1,6 @@
 import { useState } from "react";
 import forgotpic from "../../assets/forgotpass.png";
-
-const BASE_URL = "https://task-flow-g8s6.vercel.app";
+import api from "../../api/base";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -25,22 +24,15 @@ export default function ForgotPassword() {
     setErrorMsg("");
 
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setStatus("success");
-      } else {
-        setErrorMsg(data?.message || "Something went wrong. Please try again.");
-        setStatus("error");
-      }
+      await api.post("/api/auth/forgot-password", { email });
+      setStatus("success");
     } catch (err) {
-      setErrorMsg("Network error. Please check your connection and try again.");
+      console.error("[ForgotPassword] Error:", err);
+      const message =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "Something went wrong. Please try again.";
+      setErrorMsg(message);
       setStatus("error");
     }
   };
