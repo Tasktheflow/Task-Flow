@@ -95,7 +95,7 @@ export default function ResetPassword() {
     try {
       await api.post("/api/auth/reset-password", {
         token,
-        newPassword,
+        password: newPassword,
         confirmPassword,
       });
       setStatus("success");
