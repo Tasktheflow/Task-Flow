@@ -146,7 +146,9 @@ const Signinpage = () => {
                   />
                   Remember me
                 </label>
-                <span className="forgot">Forgot password?</span>
+                <Link to="/ForgotPassword" className="forgot cursor-pointer">
+                  Forgot password?
+                </Link>
               </div>
 
               {/* LOGIN BUTTON */}

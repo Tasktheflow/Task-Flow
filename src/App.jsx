@@ -16,6 +16,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import ProjectDetails from "./pages/Projects/ProjectDetails";
 import { ToastContainer } from "react-toastify";
 import Acceptinvitepage from "./pages/Acceptinvitepage/Acceptinvitepage";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import Resetpassword from "./pages/Resetpassword/Resetpassword";  
 
 function App() {
   const [count, setCount] = useState(0);
@@ -40,6 +42,8 @@ function App() {
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="/invite/accept" element={<Acceptinvitepage />} />
+          <Route path= "ForgotPassword" element={<ForgotPassword />} />
+          <Route path= "Resetpassword" element={<Resetpassword />} />
         </Routes>
       </ProjectsProvider>
     </div>

@@ -1,3 +1,9 @@
+
+// This page shows the dashboard after a project is created. It welcomes the user and shows some stats about their projects and tasks. It also includes an image to make the dashboard more visually appealing.
+
+// The component uses the `useProjects` hook to access the projects data and calculate the stats. It also retrieves the user's name from local storage to personalize the welcome message. The stats include the number of tasks in progress and the total number of projects.
+
+
 import React from "react";
 import StatsCards from "../DashStatsCards/StatsCards";
 import { useProjects } from "../Contexts/ProjectsContext";
