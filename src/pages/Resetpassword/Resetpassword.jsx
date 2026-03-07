@@ -3,19 +3,40 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import resetpic from "../../assets/reset.png";
 import api from "../../api/base";
 
-
 const EyeIcon = ({ open }) =>
   open ? (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+      />
     </svg>
   ) : (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+      />
     </svg>
   );
 
@@ -34,9 +55,12 @@ export default function ResetPassword() {
   // Password strength checker
   const getStrength = (pwd) => {
     if (!pwd) return null;
-    if (pwd.length < 6) return { label: "Too short", color: "bg-red-400", width: "w-1/4" };
-    if (pwd.length < 8) return { label: "Weak", color: "bg-orange-400", width: "w-2/4" };
-    if (!/[A-Z]/.test(pwd) || !/[0-9]/.test(pwd)) return { label: "Fair", color: "bg-yellow-400", width: "w-3/4" };
+    if (pwd.length < 6)
+      return { label: "Too short", color: "bg-red-400", width: "w-1/4" };
+    if (pwd.length < 8)
+      return { label: "Weak", color: "bg-orange-400", width: "w-2/4" };
+    if (!/[A-Z]/.test(pwd) || !/[0-9]/.test(pwd))
+      return { label: "Fair", color: "bg-yellow-400", width: "w-3/4" };
     return { label: "Strong", color: "bg-[#6b8c5a]", width: "w-full" };
   };
 
@@ -44,7 +68,9 @@ export default function ResetPassword() {
 
   const handleSubmit = async () => {
     if (!token) {
-      setErrorMsg("Reset token is missing or invalid. Please request a new link.");
+      setErrorMsg(
+        "Reset token is missing or invalid. Please request a new link.",
+      );
       setStatus("error");
       return;
     }
@@ -66,11 +92,17 @@ export default function ResetPassword() {
 
     setStatus("loading");
     setErrorMsg("");
-   try {
-      await api.post("/api/auth/reset-password", { token, newPassword, confirmPassword });
+    try {
+      await api.post("/api/auth/reset-password", {
+        token,
+        newPassword,
+        confirmPassword,
+      });
       setStatus("success");
     } catch (err) {
       console.error("[ResetPassword] Error:", err);
+      console.log("Status:", err?.response?.status);
+      console.log("Backend message:", err?.response?.data);
       const message =
         err?.response?.data?.message ||
         err?.response?.data?.error ||
@@ -85,13 +117,26 @@ export default function ResetPassword() {
       <div className="min-h-screen flex items-center justify-center  p-5 bg-[url('/src/assets/istockphoto.png')]">
         <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md px-10 py-12 flex flex-col items-center gap-4 text-center">
           <div className="w-16 h-16 rounded-full bg-red-50 border-2 border-red-400 flex items-center justify-center">
-            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z" />
+            <svg
+              className="w-8 h-8 text-red-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"
+              />
             </svg>
           </div>
-          <h2 className="text-2xl font-extrabold text-gray-900">Invalid Link</h2>
+          <h2 className="text-2xl font-extrabold text-gray-900">
+            Invalid Link
+          </h2>
           <p className="text-sm text-gray-500 leading-relaxed">
-            This password reset link is invalid or has expired. Please request a new one.
+            This password reset link is invalid or has expired. Please request a
+            new one.
           </p>
           <button
             onClick={() => navigate("/ForgotPassword")}
@@ -107,12 +152,10 @@ export default function ResetPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center p-5 bg-[url('/src/assets/istockphoto.png')]">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md px-10 py-10 flex flex-col items-center">
-
         {status !== "success" ? (
           <>
             {/* ── Illustration placeholder ── */}
             <div className="w-52 h-48 rounded-2xl bg-gray-100 flex items-center justify-center mb-2 overflow-hidden">
-              
               <img
                 src={resetpic}
                 alt="Reset password illustration"
@@ -157,19 +200,26 @@ export default function ResetPassword() {
               </button>
 
               {/* Password strength bar */}
-              {newPassword.length > 0 && strength && (
+              {/* {newPassword.length > 0 && strength && (
                 <div className="mt-2 space-y-1">
                   <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all duration-300 ${strength.color} ${strength.width}`} />
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${strength.color} ${strength.width}`}
+                    />
                   </div>
-                  <p className={`text-xs font-semibold ${
-                    strength.label === "Strong" ? "text-[#6b8c5a]" :
-                    strength.label === "Fair" ? "text-yellow-500" : "text-red-400"
-                  }`}>
+                  <p
+                    className={`text-xs font-semibold ${
+                      strength.label === "Strong"
+                        ? "text-[#6b8c5a]"
+                        : strength.label === "Fair"
+                          ? "text-yellow-500"
+                          : "text-red-400"
+                    }`}
+                  >
                     {strength.label}
                   </p>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* ── Confirm Password ── */}
@@ -199,17 +249,26 @@ export default function ResetPassword() {
 
               {/* Match indicator */}
               {confirmPassword.length > 0 && (
-                <p className={`text-xs font-semibold mt-1.5 ml-1 ${
-                  newPassword === confirmPassword ? "text-[#6b8c5a]" : "text-red-400"
-                }`}>
-                  {newPassword === confirmPassword ? "Passwords match" : " Passwords do not match."}
+                <p
+                  className={`text-xs font-semibold mt-1.5 ml-1 ${
+                    newPassword === confirmPassword
+                      ? "text-[#6b8c5a]"
+                      : "text-red-400"
+                  }`}
+                >
+                  {newPassword === confirmPassword
+                    ? "Passwords match"
+                    : " Passwords do not match."}
                 </p>
               )}
             </div>
 
             {/* ── Error message ── */}
             {status === "error" && (
-              <p className="text-red-500 text-xs mb-4 self-start ml-1"> {errorMsg}</p>
+              <p className="text-red-500 text-xs mb-4 self-start ml-1">
+                {" "}
+                {errorMsg}
+              </p>
             )}
 
             {/* ── Submit button ── */}
@@ -220,9 +279,24 @@ export default function ResetPassword() {
             >
               {status === "loading" ? (
                 <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    />
                   </svg>
                   Resetting...
                 </span>
@@ -235,13 +309,26 @@ export default function ResetPassword() {
           /* ── Success state ── */
           <div className="flex flex-col items-center gap-4 py-4 w-full text-center">
             <div className="w-20 h-20 rounded-full bg-green-50 border-2 border-[#6b8c5a] flex items-center justify-center">
-              <svg className="w-9 h-9 text-[#6b8c5a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-9 h-9 text-[#6b8c5a]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
-            <h2 className="text-2xl font-extrabold text-gray-900">Password Reset!</h2>
+            <h2 className="text-2xl font-extrabold text-gray-900">
+              Password Reset!
+            </h2>
             <p className="text-sm text-gray-500 leading-relaxed">
-              Your password has been updated successfully. You can now log in with your new password.
+              Your password has been updated successfully. You can now log in
+              with your new password.
             </p>
             <button
               onClick={() => navigate("/login")}
@@ -251,7 +338,6 @@ export default function ResetPassword() {
             </button>
           </div>
         )}
-
       </div>
     </div>
   );
