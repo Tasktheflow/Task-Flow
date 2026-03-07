@@ -42,8 +42,8 @@ function App() {
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="/invite/accept" element={<Acceptinvitepage />} />
-          <Route path= "ForgotPassword" element={<ForgotPassword />} />
-          <Route path= "Resetpassword" element={<Resetpassword />} />
+          <Route path= "/ForgotPassword" element={<ForgotPassword />} />
+          <Route path= "/reset-password" element={<Resetpassword />} />
         </Routes>
       </ProjectsProvider>
     </div>
