@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react";
 import { useProjects } from "../Contexts/ProjectsContext";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import redbin from "../../assets/redbin.png"
 
 const ProjectCard = ({ project }) => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const ProjectCard = ({ project }) => {
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white p-4 rounded-xl shadow max-w-[295px] py-[30px] px-[14.5px] border border-[#A1A3AB80] cursor-pointer group"
+      className="bg-white p-4 rounded-xl shadow max-w-[295px] py-[30px] px-[14.5px] border border-[#A1A3AB80] cursor-pointer group max-[500px]:max-w-[90%]"
     >
       <div className=" flex justify-between items-center">
         <div className=" flex gap-2.5 items-center">
@@ -90,13 +91,14 @@ const ProjectCard = ({ project }) => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start gap-4">
-                <div className="bg-red-100 p-3 rounded-full">
-                  <Trash2 className="text-red-600" size={24} />
-                </div>
+                 <div className="w-30 h-30 rounded-10 bg-red-50 flex items-center justify-center mx-auto mb-4">
+                       <img src={redbin} alt=""/>
+                      </div>
+                
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-2">Delete Project</h3>
-                  <p className="text-gray-600 mb-4">
-                    Move "{project.projectTitle}" to the Recycle Bin?
+                  <h3 className="text-lg font-semibold mb-2">Delete Project?</h3>
+                  <p className="text-gray-600 mb-4 text-sm">
+                     "{project.projectTitle}" will be moved to the Recycle Bin.
                     It will be permanently deleted after 30 days.
                   </p>
                 </div>

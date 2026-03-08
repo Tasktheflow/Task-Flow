@@ -82,10 +82,17 @@ export const createTasks = async (form) => {
   return response.data;
 };
 
-export const getTasks = async (projectId) => {
-  const response = await api.get(`/api/tasks?project=${projectId}`);
+export const getTasks = async () => {
+  const response = await api.get(`/api/tasks`);
   return response.data;
 };
+
+export const getProjectsTasks = async (projectId) => {
+  const response = await api.get(`/api/tasks/project/${projectId}`);
+  return response.data;
+};
+
+
 
 export const deleteTask = async (id) => {
   const response = await api.delete(`/api/tasks/${id}`);
@@ -121,4 +128,24 @@ export const sendInvitation = async (email, projectId) => {
 export const acceptInvitation = async (token) => {
   const response = await api.post("/api/invitations/accept", { token });
   return response.data;
+};
+
+
+export const updateTask = async (taskId, data) => {
+  // PATCH /api/tasks/:taskId
+const response = await api.put(`/api/tasks/${taskId}`, data);
+  return response.data;
+};
+
+export const addComment = async (taskId, text) => {
+  // POST /api/tasks/:taskId/comments
+  
+  const response = await api.post(`/api/tasks/${taskId}/comments`, {   message: text });
+  return response.data;
+};
+
+export const getComments = async (taskId) => {
+  // GET /api/tasks/:taskId/comments
+  // return await api.get(`/api/tasks/${taskId}/comments`);
+  return { data: [] };
 };

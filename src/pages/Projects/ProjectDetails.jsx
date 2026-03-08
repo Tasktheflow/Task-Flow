@@ -16,7 +16,7 @@ import {
 } from "@dnd-kit/core";
 import Board from "../../components/Board/Board";
 import InviteMemberModal from "../../components/InviteMembers/InviteMemberModal";
-import { getTasks } from "../../services/authService";
+import { getProjectsTasks } from "../../services/authService";
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -32,28 +32,37 @@ const ProjectDetails = () => {
     { id: "review", title: "Review", tasks: [] },
     { id: "done", title: "Done", tasks: [] },
   ]);
-useEffect(() => {
-  async function loadTasks() {
-    try {
-      const response = await getTasks(projectId);
-      const tasks = response.data; 
 
-      setBoards((prevBoards) =>
-        prevBoards.map((board) => ({
-          ...board,
-          tasks: tasks.filter(
-            (task) => task.status.toLowerCase() === board.id 
-          ),
-        }))
-      );
-    } catch (err) {
-      console.error("Failed to load tasks:", err);
+  useEffect(() => {
+    async function loadTasks() {
+      try {
+        const data = await getProjectsTasks(projectId); // already returns response.data
+
+        console.log("Tasks:", data); //  checked the shape
+
+        const tasks = data.data ?? data; // handles { data: [...] } or plain array
+
+        const normalizedTasks = tasks.map((task) => ({
+          ...task,
+          id: task._id || task.id,
+          assignedTo: task.assignedTo ?? null,
+        }));
+
+        setBoards((prevBoards) =>
+          prevBoards.map((board) => ({
+            ...board,
+            tasks: normalizedTasks.filter(
+              (task) => task.status.toLowerCase() === board.id,
+            ),
+          })),
+        );
+      } catch (err) {
+        console.error("Failed to load tasks:", err);
+      }
     }
-  }
 
-  if (projectId) loadTasks();
-}, [projectId]);
-
+    if (projectId) loadTasks();
+  }, [projectId]);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -61,6 +70,15 @@ useEffect(() => {
       },
     }),
   );
+
+  const handleDeleteTask = (deletedId) => {
+    setBoards((prev) =>
+      prev.map((board) => ({
+        ...board,
+        tasks: board.tasks.filter((t) => t.id !== deletedId),
+      })),
+    );
+  };
 
   const handleDragStart = (event) => {
     const { active } = event;
@@ -180,9 +198,7 @@ useEffect(() => {
     >
       <header className=" px-[57px] flex items-center w-full justify-between border-b border-[#A1A3AB4D] pb-[25px] max-[1250px]:px-3 max-[500px]:pb-2.5 max-[460px]:flex-col max-[460px]:items-start max-[460px]:gap-2">
         <div>
-          <div
-            className=" flex gap-7 max-[800px]:gap-2 max-[460px]:gap-10 max-[400px]:gap-4 max-[400px]:justify-between max-[400px]:w-full"
-          >
+          <div className=" flex gap-7 max-[800px]:gap-2 max-[460px]:gap-10 max-[400px]:gap-4 max-[400px]:justify-between max-[400px]:w-full">
             <button onClick={() => navigate(-1)}>
               <IoArrowBackOutline size={24} className=" font-light" />
             </button>
@@ -227,7 +243,7 @@ useEffect(() => {
           <div className=" max-[1090px]:w-[1050px]">
             <div className="grid grid-cols-4 gap-4 items-start ">
               {boards.map((board) => (
-                <Board key={board.id} board={board} />
+                <Board key={board.id} board={board} projectId={projectId}  onDeleteTask={handleDeleteTask}/>
               ))}
             </div>
           </div>

@@ -23,7 +23,7 @@ const Dashboard = () => {
 
       {/* sidebar Navigation */}
 
-      <div className=" flex flex-1 overflow-hidden">
+      <div className=" flex flex-1 overflow-auto">
         {sidebarOpen && (
           <div
             onClick={() => setSidebarOpen(false)}
@@ -39,7 +39,7 @@ const Dashboard = () => {
 
     max-[1250px]:fixed max-[1250px]:top-0 max-[1250px]:left-0 
     max-[1250px]:h-screen max-[1250px]:z-50 max-[1250px]:bg-white
-    max-[1250px]:pt-24
+    max-[1250px]:pt-16
 
     ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
   min-[1250px]:translate-x-0

@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Dropdown from "../Ui/Dropdown";
 import { toast } from "react-toastify";
 import { createTasks } from "../../services/authService";
+import { getProjectMembers } from "../../services/authService";
+import MembersDropdown from "../Ui/Addmembersdropdown";
 
 const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
   const [form, setForm] = useState({
@@ -15,6 +17,8 @@ const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
     startDate: "",
     personal: false,
   });
+
+  const [members, setMembers] = useState([]);
 
   const [errors, setErrors] = useState({});
 
@@ -37,32 +41,52 @@ const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validate()) return;
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const data = await getProjectMembers(projectId);
+        console.log("Fetched Members:", data);
+        const mapped = data.members.map((m) => ({
+          label: m.username,
+          value: m._id,
+        }));
+        setMembers(mapped);
+      } catch (error) {
+        console.error("Failed to fetch members:", error);
+      }
+    };
 
-  try {
-    const newTask = await createTasks({ ...form, projectId });
+    if (projectId) fetchMembers();
+  }, [projectId]);
 
-    const formattedTask = {
-  ...newTask.data,
-  id: newTask.data.id,
-  status: "todo",   
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
 
-  console.log("Created Task:", formattedTask);
-    onCreate(formattedTask); 
+    console.log("Payload being sent:", { ...form, projectId });
 
-    toast.success("Task created successfully!");
+    try {
+      const newTask = await createTasks({ ...form, projectId });
 
-    onClose();
-  } catch (error) {
-    console.error("Error creating task:", error);
-    toast.error(
-      error.response?.data?.message || "Failed to create task"
-    );
-  }
-};
+      const formattedTask = {
+        ...newTask.data,
+        id: newTask.data._id || newTask.data.id,
+        status: "todo",
+          assignedTo: newTask.data.assignedTo ?? null,
+      };
+
+      // console.log("Created Task:", formattedTask);
+      onCreate(formattedTask);
+
+      toast.success("Task created successfully!");
+
+      onClose();
+    } catch (error) {
+      console.error("Full error:", error.response?.data);
+      console.error("Error creating task:", error);
+      toast.error(error.response?.data?.message || "Failed to create task");
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 font-['inter']">
@@ -95,7 +119,9 @@ const handleSubmit = async (e) => {
 
           {/* Description */}
           <div>
-            <label className="text-[16px]  font-normal max-[500px]:text-[14px]">Description</label>
+            <label className="text-[16px]  font-normal max-[500px]:text-[14px]">
+              Description
+            </label>
             <textarea
               name="description"
               value={form.description}
@@ -149,21 +175,20 @@ const handleSubmit = async (e) => {
 
           {/* Assign + Due date */}
           <div className="grid grid-cols-2 gap-3 max-[490px]:grid-cols-1">
-            <Dropdown
+            <MembersDropdown
               label="Assign To"
-              value={form.assignee}
-              onChange={(value) =>
-                setForm((prev) => ({ ...prev, assignee: value }))
-              }
-              options={[
-                { label: "Ada", value: "Ada" },
-                { label: "Dave", value: "Dave" },
-                { label: "Tems", value: "Tems" },
-              ]}
+              value={form.assignedTo}
+              onChange={(value) => {
+                console.log("Dropdown returned:", value); 
+                setForm((prev) => ({ ...prev, assignedTo: value }));
+              }}
+              options={members}
             />
 
             <div>
-              <label className="text-[16px] font-normal max-[500px]:text-[14px]">Due Date</label>
+              <label className="text-[16px] font-normal max-[500px]:text-[14px]">
+                Due Date
+              </label>
               <input
                 type="date"
                 name="dueDate"
