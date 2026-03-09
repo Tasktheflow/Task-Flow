@@ -23,6 +23,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import MembersDropdown from "../Ui/Addmembersdropdown";
 
+const currentUser = JSON.parse(localStorage.getItem("user"));
+
 const getInitials = (name = "") =>
   name
     .split(" ")
@@ -155,20 +157,26 @@ const TaskDetailModal = ({ task, projectId, onClose, onUpdate }) => {
   const handleAddComment = async () => {
     if (!commentText.trim()) return;
     try {
-      const res = await addComment(task._id || task.id, commentText.trim());
-      const newComment = res?.data ?? {
+      await addComment(task._id || task.id, commentText.trim());
+
+      const newComment = {
         _id: Date.now(),
         text: commentText.trim(),
         createdAt: new Date(),
-        author: { name: "You" },
+        author: {
+          name: currentUser?.username || currentUser?.name || "You",
+          isCurrentUser: true,
+        },
       };
+
       setComments((prev) => [...prev, newComment]);
       setCommentText("");
       setTimeout(
         () => commentRef.current?.scrollIntoView({ behavior: "smooth" }),
         100,
       );
-    } catch {
+    } catch (err) {
+      console.error("Comment error:", err.response?.data);
       toast.error("Failed to add comment");
     }
   };
@@ -379,7 +387,7 @@ const TaskDetailModal = ({ task, projectId, onClose, onUpdate }) => {
                 onClick={handleAddTag}
                 className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition max-[400px]:text-[10px]"
               >
-                 Add
+                Add
               </button>
             </div>
           </div>
@@ -465,12 +473,19 @@ const TaskDetailModal = ({ task, projectId, onClose, onUpdate }) => {
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs font-semibold text-gray-700">
                           {c.author?.name || "User"}
+                          {c.author?.isCurrentUser && (
+                            <span className="text-gray-400 font-normal ml-1">
+                              (you)
+                            </span>
+                          )}
                         </span>
                         <span className="text-[11px] text-gray-400">
                           {moment(c.createdAt).fromNow()}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600">{c.text}</p>
+                      <p className="text-sm text-gray-600">
+                        {c.text ?? c.message}
+                      </p>
                     </div>
                   </motion.div>
                 ))}
