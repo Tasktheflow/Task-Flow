@@ -15,13 +15,13 @@ const Projects = () => {
   const isProjectDetails = Boolean(projectId);
 
   return (
-    <div className="bg-[url('/src/assets/dashbg.png')] h-screen pt-[45px] font-['inter'] max-[500px]:pt-3">
+    <div className="bg-[url('/src/assets/dashbg.png')] min-h-screen pt-[45px] font-['inter'] max-[500px]:pt-3">
       {!isProjectDetails && (
         <>
           <div className="flex items-center justify-between px-10 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-2.5 max-[500px]:px-3">
             <div>
-              <h1 className="text-[24px] font-medium">All projects</h1>
-              <p className="mt-[11px] text-[20px] font-light">
+              <h1 className="text-[24px] font-medium max-[500px]:text-[20px]">All projects</h1>
+              <p className="mt-[11px] text-[20px] font-light max-[500px]:text-[16px]">
                 Manage your projects and track progress
               </p>
             </div>
@@ -38,11 +38,11 @@ const Projects = () => {
           {loading && <p className="px-10 mt-6">Loading projects...</p>}
 
           {!loading && projects?.length === 0 && (
-            <div className=" mt-20 w-full flex justify-center items-center">
+            <div className=" mt-20 w-full flex justify-center items-center max-[500px]:w-[90%] max-[500px]:mx-auto">
              <div className="flex flex-col items-center justify-center text-center">
               <img src={octicon} alt="" className=" mb-[25px]"/>
               <p className=" text-[16px] font-light mb-[11px]">No Projects Yet</p>
-              <h4 className="  font-light text-[20px]">Create your first project to start organizing your team's work!</h4>
+              <h4 className="  font-light text-[16px]">Create your first project to start organizing your team's work!</h4>
              </div>
             </div>
           )}

@@ -5,12 +5,15 @@ import "./index.css";
 import { BrowserRouter } from "react-router";
 import { ProjectsProvider } from "./components/Contexts/ProjectsContext.jsx";
 
+
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <StrictMode>
-      <ProjectsProvider>
-        <App />
-      </ProjectsProvider>
+    
+        <ProjectsProvider>
+          <App />
+        </ProjectsProvider>
+    
     </StrictMode>
   </BrowserRouter>,
 );
