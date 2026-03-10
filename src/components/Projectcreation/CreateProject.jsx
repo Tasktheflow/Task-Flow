@@ -104,6 +104,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
     setIsSubmitting(true);
 
     try {
+      console.log("formData before submit:", formData);
       const res = await addProject(formData);
 
       if (!res.success) {
@@ -128,7 +129,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
 
       if (selectedEmails.length > 0) {
         Promise.allSettled(
-          selectedEmails.map((email) => sendInvitation(email, projectId)),
+          selectedEmails.map((email) => addMember(projectId, email)),
         ).then((results) => {
           results.forEach((result, i) => {
             if (result.status === "rejected") {
@@ -146,6 +147,9 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
         });
       }
     } catch (error) {
+       console.error("Full error:", error);
+  console.error("Response data:", error.response?.data);
+  console.error("Status:", error.response?.status);
       console.error("handleSubmit error:", error);
       toast.error(error.response?.data?.message || "Failed to create project");
     } finally {

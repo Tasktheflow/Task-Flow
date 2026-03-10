@@ -1,16 +1,52 @@
-# React + Vite
+# Task Flow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+📌 About
 
-Currently, two official plugins are available:
+TaskFlow is a simple and intuitive web application designed for small teams to plan projects, assign tasks, monitor progress, and collaborate efficiently.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The platform focuses on improving clarity, accountability, and real-time visibility into team activities, helping teams stay organized and productive while managing multiple projects.
 
-## React Compiler
+TaskFlow allows users to create projects, manage tasks, track progress, and keep everyone aligned with the current state of work.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+✨ Features
 
-## Expanding the ESLint configuration
+Project Management:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Create and organize projects for different teams or workflows.
+
+Task Assignment:
+
+Assign tasks to team members and define responsibilities clearly.
+
+Progress Tracking:
+
+Monitor the status of tasks and project progress in real time.
+
+Task Details & Organization:
+
+View detailed information about tasks including descriptions and updates.
+
+Collaboration Friendly:
+
+Enables teams to coordinate work and stay informed about ongoing activities.
+
+Simple & Intuitive Interface:
+
+Designed with a clean UI for easy navigation and productivity.
+
+
+⚙️ Tech Stack
+
+Frontend
+
+React – For building the interactive user interface.
+
+Tailwind CSS – For fast and responsive styling.
+
+CSS – For additional custom styling.
+
+
+🎯 Goal of the Project
+
+The goal of TaskFlow is to create a lightweight yet powerful task management system that helps small teams stay organized without the complexity of large enterprise tools.
+

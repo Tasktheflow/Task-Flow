@@ -2,13 +2,13 @@ import { useState } from "react";
 import "./Signinpage.css";
 import illustration from "../../assets/illustration.png";
 import { FaUser, FaLock, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
-import { useNavigate } from "react-router";
 import { Link } from "react-router";
 import { loginUser } from "../../services/authService";
 import { toast } from "react-toastify";
 import LoadingButton from "../../components/loadingButton/LoadingButton";
 import google from "../../assets/FB.png";
 import { useProjects } from "../../components/Contexts/ProjectsContext";
+import { useNavigate, useSearchParams } from "react-router";
 
 const Signinpage = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +17,7 @@ const Signinpage = () => {
     remember: false,
   });
 
+  const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -67,7 +68,8 @@ const Signinpage = () => {
         localStorage.setItem("user", JSON.stringify(res.data.user));
         localStorage.setItem("token", res.data.token);
         await fetchProjects();
-        navigate("/dashboard");
+        const redirect = searchParams.get("redirect");
+        navigate(redirect || "/dashboard");
       } else {
         toast.error(res.message);
       }
@@ -89,7 +91,9 @@ const Signinpage = () => {
             <h2 className="logo">
               <span>Task</span>Flow
             </h2>
-            <p className="tagline max-[430px]:w-full">Simple task management for teams</p>
+            <p className="tagline max-[430px]:w-full">
+              Simple task management for teams
+            </p>
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -177,8 +181,9 @@ const Signinpage = () => {
             </div>
           </form>
           <p className=" font-semibold text-[16px] w-[335px] text-center place-self-center mt-7 max-[340px]:w-full">
-            By continuing, you agree to TaskFlow’s <span className=" text-[#1A73E8]">Terms of Service</span>{" "}
-            and <span className=" text-[#1A73E8]"> Privacy Policy</span>
+            By continuing, you agree to TaskFlow’s{" "}
+            <span className=" text-[#1A73E8]">Terms of Service</span> and{" "}
+            <span className=" text-[#1A73E8]"> Privacy Policy</span>
           </p>
         </div>
         <div className="login-left flex justify-center items-center max-[850px]:hidden">
