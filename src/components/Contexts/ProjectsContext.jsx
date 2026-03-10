@@ -17,6 +17,7 @@ export const ProjectsProvider = ({ children }) => {
     setLoading(true);
     try {
       const res = await getMyProjects();
+      console.log("Fetched projects:", res);
       setProjects(res.data);
     } catch (error) {
       console.log("Failed to fetch projects", error);
@@ -25,7 +26,7 @@ export const ProjectsProvider = ({ children }) => {
     }
   };
 
-  // In ProjectsContext.jsx - addProject function
+  
   const addProject = async (projectData) => {
     try {
       const res = await createProject(projectData);
@@ -38,7 +39,7 @@ export const ProjectsProvider = ({ children }) => {
     }
   };
 
-  // In ProjectsContext.jsx
+ 
   const deleteProject = async (projectId) => {
     try {
       const res = await deleteProjectAPI(projectId);
