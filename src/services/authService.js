@@ -127,6 +127,7 @@ export const sendInvitation = async (email, projectId) => {
 
 export const acceptInvitation = async (token) => {
   const response = await api.post("/api/invitations/accept", { token });
+   console.log("invite response:", response.data);
   return response.data;
 };
 

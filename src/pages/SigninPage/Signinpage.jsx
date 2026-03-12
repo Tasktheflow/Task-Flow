@@ -62,14 +62,21 @@ const Signinpage = () => {
 
     try {
       const res = await loginUser(formData);
-
       if (res.success) {
         toast.success(res.message);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         localStorage.setItem("token", res.data.token);
         await fetchProjects();
-        const redirect = searchParams.get("redirect");
-        navigate(redirect || "/dashboard");
+
+        // Check for pending invite
+        const inviteToken = localStorage.getItem("inviteToken");
+        if (inviteToken) {
+          localStorage.removeItem("inviteToken");
+          navigate(`/invite?token=${inviteToken}`);
+        } else {
+          const redirect = searchParams.get("redirect");
+          navigate(redirect || "/dashboard");
+        }
       } else {
         toast.error(res.message);
       }
