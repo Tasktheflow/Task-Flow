@@ -132,7 +132,6 @@ export const acceptInvitation = async (token) => {
 
 
 export const updateTask = async (taskId, data) => {
-  // PATCH /api/tasks/:taskId
 const response = await api.put(`/api/tasks/${taskId}`, data);
   return response.data;
 };
@@ -149,3 +148,13 @@ export const getComments = async (taskId) => {
   // return await api.get(`/api/tasks/${taskId}/comments`);
   return { data: [] };
 };
+
+export const updateTaskStatus = async (id, status) => {
+  const response = await api.patch(`/api/tasks/${id}/status`, { status });
+  return response.data;
+};
+
+export const logOutUser = async () => {
+  const response = await api.post("/api/auth/logout");
+  return response.data;
+}

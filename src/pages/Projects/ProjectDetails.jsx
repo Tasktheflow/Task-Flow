@@ -5,7 +5,7 @@ import { MdGroupAdd } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import CreateTaskModal from "../../components/Tasks/CreateTasksModal";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -17,6 +17,7 @@ import {
 import Board from "../../components/Board/Board";
 import InviteMemberModal from "../../components/InviteMembers/InviteMemberModal";
 import { getProjectsTasks } from "../../services/authService";
+import { updateTaskStatus } from "../../services/authService";
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
@@ -33,36 +34,41 @@ const ProjectDetails = () => {
     { id: "done", title: "Done", tasks: [] },
   ]);
 
-  useEffect(() => {
-    async function loadTasks() {
-      try {
-        const data = await getProjectsTasks(projectId); // already returns response.data
+const loadTasks = useCallback(async () => {
+  try {
+    const data = await getProjectsTasks(projectId);
+    const tasks = Array.isArray(data) ? data : [];
 
-        console.log("Tasks:", data); //  checked the shape
+    const normalizedTasks = tasks.map((task) => ({
+      ...task,
+      id: task._id || task.id,
+      assignedTo: task.assignedTo ?? null,
+    }));
 
-        const tasks = data.data ?? data; // handles { data: [...] } or plain array
+    const STATUS_MAP = {
+      todo: "todo",
+      inprogress: "progress",
+      review: "review",
+      done: "done",
+    };
 
-        const normalizedTasks = tasks.map((task) => ({
-          ...task,
-          id: task._id || task.id,
-          assignedTo: task.assignedTo ?? null,
-        }));
+    setBoards((prevBoards) =>
+      prevBoards.map((board) => ({
+        ...board,
+        tasks: normalizedTasks.filter(
+          (task) => STATUS_MAP[task.status?.toLowerCase()] === board.id,
+        ),
+      }))
+    );
+  } catch (err) {
+    console.error("Failed to load tasks:", err);
+  }
+}, [projectId]);
 
-        setBoards((prevBoards) =>
-          prevBoards.map((board) => ({
-            ...board,
-            tasks: normalizedTasks.filter(
-              (task) => task.status.toLowerCase() === board.id,
-            ),
-          })),
-        );
-      } catch (err) {
-        console.error("Failed to load tasks:", err);
-      }
-    }
+useEffect(() => {
+  if (projectId) loadTasks();
+}, [projectId, loadTasks]);
 
-    if (projectId) loadTasks();
-  }, [projectId]);
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -92,85 +98,125 @@ const ProjectDetails = () => {
     }
   };
 
-  const handleDragEnd = ({ active, over }) => {
-    setActiveTask(null);
+const STATUS_REVERSE_MAP = {
+  "todo": "Todo",
+  "progress": "Inprogress",
+  "review": "Review",
+  "done": "Done",
+};
 
-    if (!over) return;
+const STATUS_FLOW = {
+  "Todo": ["Inprogress"],
+  "Inprogress": ["Review"],
+  "Review": ["Done", "Inprogress"],
+  "Done": [],
+};
 
-    const activeId = active.id;
-    const overId = over.id;
+const handleDragEnd = ({ active, over }) => {
+  setActiveTask(null);
+  if (!over) return;
 
-    let sourceBoardId = null;
-    let draggedTask = null;
-    let sourceIndex = -1;
+  const activeId = active.id;
+  const overId = over.id;
 
+  let sourceBoardId = null;
+  let draggedTask = null;
+  let sourceIndex = -1;
+
+  for (const board of boards) {
+    const foundIndex = board.tasks.findIndex((t) => t.id === activeId);
+    if (foundIndex !== -1) {
+      sourceBoardId = board.id;
+      draggedTask = board.tasks[foundIndex];
+      sourceIndex = foundIndex;
+      break;
+    }
+  }
+
+  if (!draggedTask) return;
+
+  let targetBoardId = null;
+  let targetIndex = -1;
+
+  const boardMatch = boards.find((b) => b.id === overId);
+  if (boardMatch) {
+    targetBoardId = boardMatch.id;
+    targetIndex = boardMatch.tasks.length;
+  } else {
     for (const board of boards) {
-      const foundIndex = board.tasks.findIndex((t) => t.id === activeId);
+      const foundIndex = board.tasks.findIndex((t) => t.id === overId);
       if (foundIndex !== -1) {
-        sourceBoardId = board.id;
-        draggedTask = board.tasks[foundIndex];
-        sourceIndex = foundIndex;
+        targetBoardId = board.id;
+        targetIndex = foundIndex;
         break;
       }
     }
+  }
 
-    if (!draggedTask) return;
+  if (!targetBoardId) return;
 
-    let targetBoardId = null;
-    let targetIndex = -1;
-
-    const boardMatch = boards.find((b) => b.id === overId);
-    if (boardMatch) {
-      targetBoardId = boardMatch.id;
-      targetIndex = boardMatch.tasks.length;
-    } else {
-      for (const board of boards) {
-        const foundIndex = board.tasks.findIndex((t) => t.id === overId);
-        if (foundIndex !== -1) {
-          targetBoardId = board.id;
-          targetIndex = foundIndex;
-          break;
+  // ─── Same board reorder — no status change needed ─────────────────────────
+  if (sourceBoardId === targetBoardId) {
+    if (sourceIndex === targetIndex) return;
+    setBoards((prevBoards) =>
+      prevBoards.map((board) => {
+        if (board.id === sourceBoardId) {
+          const newTasks = [...board.tasks];
+          newTasks.splice(sourceIndex, 1);
+          newTasks.splice(targetIndex, 0, draggedTask);
+          return { ...board, tasks: newTasks };
         }
-      }
+        return board;
+      })
+    );
+    return;
+  }
+
+  // ─── Cross board — validate against STATUS_FLOW first ────────────────────
+  const currentStatus = STATUS_REVERSE_MAP[sourceBoardId]; // e.g "Todo"
+  const targetStatus = STATUS_REVERSE_MAP[targetBoardId];  // e.g "Done"
+  const allowedMoves = STATUS_FLOW[currentStatus] || [];
+
+  const STATUS_TO_BACKEND = {
+  "todo": "todo",
+  "progress": "inprogress", 
+  "review": "review",
+  "done": "done",
+};
+
+
+  if (!allowedMoves.includes(targetStatus)) {
+    toast.error(
+      `Cannot move task from ${currentStatus} to ${targetStatus}`
+    );
+    return; // block the drag — UI snaps back, no API call
+  }
+
+  // ─── Valid move — update UI then sync backend ─────────────────────────────
+ setBoards((prevBoards) =>
+  prevBoards.map((board) => {
+    if (board.id === sourceBoardId) {
+      return {
+        ...board,
+        tasks: board.tasks.filter((t) => t.id !== draggedTask.id),
+      };
     }
-
-    if (!targetBoardId) return;
-
-    if (sourceBoardId === targetBoardId) {
-      if (sourceIndex === targetIndex) return;
-
-      setBoards((prevBoards) =>
-        prevBoards.map((board) => {
-          if (board.id === sourceBoardId) {
-            const newTasks = [...board.tasks];
-            newTasks.splice(sourceIndex, 1);
-            newTasks.splice(targetIndex, 0, draggedTask);
-            return { ...board, tasks: newTasks };
-          }
-          return board;
-        }),
-      );
-    } else {
-      setBoards((prevBoards) =>
-        prevBoards.map((board) => {
-          if (board.id === sourceBoardId) {
-            return {
-              ...board,
-              tasks: board.tasks.filter((t) => t.id !== draggedTask.id),
-            };
-          }
-
-          if (board.id === targetBoardId) {
-            const newTasks = [...board.tasks];
-            newTasks.splice(targetIndex, 0, draggedTask);
-            return { ...board, tasks: newTasks };
-          }
-
-          return board;
-        }),
-      );
+    if (board.id === targetBoardId) {
+      const newTasks = [...board.tasks];
+      newTasks.splice(targetIndex, 0, {
+        ...draggedTask,
+        status: STATUS_TO_BACKEND[targetBoardId], // ← add this
+      });
+      return { ...board, tasks: newTasks };
     }
-  };
+    return board;
+  })
+);
+  updateTaskStatus(draggedTask.id, targetStatus).catch((err) => {
+    console.error("Failed to update task status:", err);
+    toast.error("Failed to update task status");
+  });
+};
 
   const addTask = (task) => {
     setBoards((prevBoards) =>
@@ -183,10 +229,19 @@ const ProjectDetails = () => {
   };
 
   const project = projects?.find((p) => p._id === projectId);
+  const handleTaskUpdate = useCallback(async () => {
+    await loadTasks();
+  }, [loadTasks]);
 
-  if (!project) {
-    return <p className=" p-3">getting project details...</p>;
-  }
+  if (!project)   return (
+    <div className="w-full h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 rounded-full border-4 border-green-200 border-t-green-600 animate-spin" />
+        <p className="text-sm text-gray-400 font-['inter']">Loading project details...</p>
+      </div>
+    </div>
+  );
+
 
   return (
     <motion.div
@@ -243,7 +298,14 @@ const ProjectDetails = () => {
           <div className=" max-[1090px]:w-[1050px]">
             <div className="grid grid-cols-4 gap-4 items-start ">
               {boards.map((board) => (
-                <Board key={board.id} board={board} projectId={projectId}  onDeleteTask={handleDeleteTask}/>
+                <Board
+                  key={board.id}
+                  board={board}
+                  projectId={projectId}
+                  onDeleteTask={handleDeleteTask}
+                onRefresh={handleTaskUpdate}
+                 onTaskUpdate={handleTaskUpdate}
+                />
               ))}
             </div>
           </div>

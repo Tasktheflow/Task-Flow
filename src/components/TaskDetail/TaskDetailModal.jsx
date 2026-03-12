@@ -40,10 +40,10 @@ const PRIORITY_COLORS = {
 };
 
 const STATUS_OPTIONS = [
-  { label: "To-Do", value: "todo" },
-  { label: "In Progress", value: "progress" },
-  { label: "Review", value: "review" },
-  { label: "Done", value: "done" },
+  { label: "To-Do", value: "Todo" },
+  { label: "In Progress", value: "Inprogress" },
+  { label: "Review", value: "Review" },
+  { label: "Done", value: "Done" },
 ];
 
 const PRIORITY_OPTIONS = [
@@ -53,7 +53,7 @@ const PRIORITY_OPTIONS = [
 ];
 
 // ─── TaskDetailModal ─────────────────────────────────────────────────
-const TaskDetailModal = ({ task, projectId, onClose, onUpdate }) => {
+const TaskDetailModal = ({ task, projectId, onClose, onUpdate, onRefresh}) => {
   const [form, setForm] = useState({ ...task });
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState(task.title);
@@ -73,7 +73,6 @@ const TaskDetailModal = ({ task, projectId, onClose, onUpdate }) => {
     const load = async () => {
       try {
         const membersData = await getProjectMembers(projectId);
-        console.log("Members in modal:", membersData);
         const list = membersData?.members ?? membersData?.data?.members ?? [];
         setMembers(list.map((m) => ({ label: m.username, value: m._id })));
       } catch {
@@ -96,19 +95,25 @@ const TaskDetailModal = ({ task, projectId, onClose, onUpdate }) => {
   }, [editingTitle]);
 
   // ── Auto-save helper ────
-  const autoSave = async (field, value) => {
-    setSavingField(field);
-    try {
-      await updateTask(task._id || task.id, { [field]: value });
-      const updated = { ...form, [field]: value };
-      setForm(updated);
-      onUpdate?.(updated); // lift state up to board
-    } catch {
-      toast.error("Failed to save change");
-    } finally {
-      setTimeout(() => setSavingField(null), 800);
-    }
-  };
+ const autoSave = async (field, value) => {
+  setSavingField(field);
+  try {
+    const res = await updateTask(task._id || task.id, { [field]: value });
+      console.log("update response:", res);
+    const updated = { ...form, [field]: value };
+    setForm(updated);
+    onUpdate?.(updated);
+    await onRefresh?.();
+  } catch  (err) {
+    console.log("full error:", err); // 👈 change this
+  console.error("error message:", err.message);
+  console.error("error stack:", err.stack);
+     console.error("autoSave error:", err.response?.data);
+    toast.error("Failed to save change");
+  } finally {
+    setTimeout(() => setSavingField(null), 800);
+  }
+};
 
   // ── Title save ─────
   const handleTitleSave = async () => {
@@ -182,11 +187,11 @@ const TaskDetailModal = ({ task, projectId, onClose, onUpdate }) => {
   };
 
   // ── Complete ─────
-  const handleComplete = async () => {
-    await autoSave("status", "done");
-    toast.success("Task marked as complete!");
-    onClose();
-  };
+const handleComplete = async () => {
+  await autoSave("status", "Done"); // 👈 capital D
+  toast.success("Task marked as complete!");
+  onClose();
+};
 
   const priorityColors = PRIORITY_COLORS[form.priority] || PRIORITY_COLORS.Low;
 
@@ -523,11 +528,11 @@ const TaskDetailModal = ({ task, projectId, onClose, onUpdate }) => {
         <div className="sticky bottom-0 bg-white border-t border-gray-100 px-8 py-4 flex justify-center">
           <button
             onClick={handleComplete}
-            disabled={form.status === "done"}
+           disabled={form.status === "Done"}
             className="flex items-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-200 disabled:text-gray-400 text-white font-medium px-8 py-2.5 rounded-xl transition"
           >
             <LuCheck size={16} />
-            {form.status === "done" ? "Completed" : "Complete"}
+           {form.status === "Done" ? "Completed" : "Complete"}
           </button>
         </div>
       </motion.div>

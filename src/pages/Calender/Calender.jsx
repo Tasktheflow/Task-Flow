@@ -54,7 +54,7 @@ const TaskRow = ({ task, onDelete, onRestore }) => {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: isDeleted ? 0.5 : 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
-      className="flex items-center gap-4 px-4 py-3 rounded-xl border border-gray-100 bg-white hover:shadow-sm transition-shadow group max-[370px]:flex-col max-[370px]:items-start max-[370px]"
+      className="flex items-center gap-4 px-4 py-3 rounded-xl border border-gray-100 bg-white hover:shadow-sm transition-shadow group w-full justify-between   max-[370px]:flex-col max-[370px]:items-start max-[370px]"
     >
       <div className="flex items-center gap-4">
         {/* Priority dot */}
@@ -79,7 +79,7 @@ const TaskRow = ({ task, onDelete, onRestore }) => {
         </div>
       </div>
 
-      <div className="flex items-center flex-row">
+      <div className="flex items-center flex-row gap-2">
         {/* Priority badge */}
         <span
           className="text-xs font-medium px-2.5 py-1 rounded-full shrink-0"
@@ -94,7 +94,7 @@ const TaskRow = ({ task, onDelete, onRestore }) => {
 
         {/* Actions */}
         <div
-          className={`flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ${
+          className={`flex gap-2 opacity-100 group-hover:opacity-100 transition-opacity shrink-0 ${
             isTouchDevice ? "opacity-100" : "opacity-0 group-hover:opacity-100"
           }`}
         >

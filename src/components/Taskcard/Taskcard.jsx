@@ -8,15 +8,20 @@ import { deleteTask } from "../../services/authService";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { FaTrash } from "react-icons/fa";
-import redbin from "../../assets/redbin.png"
+import redbin from "../../assets/redbin.png";
 
 const getInitials = (name) =>
-  name?.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+  name
+    ?.split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
 const PRIORITY_ACCENT = {
-  High:   "bg-red-400",
+  High: "bg-red-400",
   Medium: "bg-orange-400",
-  Low:    "bg-green-400",
+  Low: "bg-green-400",
 };
 
 // ── Confirmation Modal ────────────────────────────────────────────────
@@ -34,7 +39,7 @@ const DeleteConfirmModal = ({ task, onConfirm, onCancel, isDeleting }) => (
     >
       {/* Illustration */}
       <div className="w-30 h-30 rounded-10 bg-red-50 flex items-center justify-center mx-auto mb-4">
-       <img src={redbin} alt=""/>
+        <img src={redbin} alt="" />
       </div>
 
       <h3 className="text-[17px] font-semibold text-gray-900 text-center mb-1">
@@ -65,13 +70,26 @@ const DeleteConfirmModal = ({ task, onConfirm, onCancel, isDeleting }) => (
 );
 
 // ── TaskCard ───
-const TaskCard = ({ task, boardId, projectId, onUpdate, onDelete }) => {
-  const [showDetail, setShowDetail]       = useState(false);
-  const [showConfirm, setShowConfirm]     = useState(false);
-  const [isDeleting, setIsDeleting]       = useState(false);
+const TaskCard = ({
+  task,
+  boardId,
+  projectId,
+ onTaskUpdate,
+  onDelete,
+  onRefresh,
+}) => {
+  const [showDetail, setShowDetail] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: task.id, data: { type: "task", boardId } });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id, data: { type: "task", boardId } });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -111,7 +129,9 @@ const TaskCard = ({ task, boardId, projectId, onUpdate, onDelete }) => {
         className="bg-white rounded-xl shadow-sm border border-gray-100 flex overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
       >
         {/* Priority accent bar */}
-        <div className={`w-1 shrink-0 rounded-l-xl ${PRIORITY_ACCENT[task.priority] || "bg-orange-400"}`} />
+        <div
+          className={`w-1 shrink-0 rounded-l-xl ${PRIORITY_ACCENT[task.priority] || "bg-orange-400"}`}
+        />
 
         {/* Content */}
         <div className="flex-1 px-4 py-3 min-w-0">
@@ -127,7 +147,9 @@ const TaskCard = ({ task, boardId, projectId, onUpdate, onDelete }) => {
             {task.dueDate && (
               <span className="flex items-center gap-1.5 shrink-0">
                 <LuCalendar size={14} className="text-gray-400" />
-                <span className="text-xs">{moment(task.dueDate).format("MMM Do")}</span>
+                <span className="text-xs">
+                  {moment(task.dueDate).format("MMM Do")}
+                </span>
               </span>
             )}
           </div>
@@ -153,10 +175,8 @@ const TaskCard = ({ task, boardId, projectId, onUpdate, onDelete }) => {
               task={task}
               projectId={projectId}
               onClose={() => setShowDetail(false)}
-              onUpdate={(updatedTask) => {
-                onUpdate?.(updatedTask);
-                setShowDetail(false);
-              }}
+             onUpdate={onTaskUpdate}
+              onRefresh={onRefresh}
             />
           </div>
         )}

@@ -35,7 +35,12 @@ const Projects = () => {
             </button>
           </div>
 
-          {loading && <p className="px-10 mt-6">Loading projects...</p>}
+          {loading &&  <div className="w-full flex items-center justify-center mt-30">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-10 h-10 rounded-full border-4 border-green-200 border-t-green-600 animate-spin" />
+        <p className="text-sm text-gray-400 font-['inter']">Loading project details...</p>
+      </div>
+    </div>}
 
           {!loading && projects?.length === 0 && (
             <div className=" mt-20 w-full flex justify-center items-center max-[500px]:w-[90%] max-[500px]:mx-auto">

@@ -6,11 +6,12 @@ import { createTasks } from "../../services/authService";
 import { getProjectMembers } from "../../services/authService";
 import MembersDropdown from "../Ui/Addmembersdropdown";
 
+
 const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    status: "todo",
+    status: "",
     priority: "",
     assignedTo: "",
     dueDate: "",
@@ -19,6 +20,8 @@ const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
   });
 
   const [members, setMembers] = useState([]);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [errors, setErrors] = useState({});
 
@@ -63,28 +66,23 @@ const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log("Payload being sent:", { ...form, projectId });
-
+    setIsSubmitting(true); // 👈 disable button
     try {
       const newTask = await createTasks({ ...form, projectId });
-
       const formattedTask = {
         ...newTask.data,
         id: newTask.data._id || newTask.data.id,
         status: "todo",
-          assignedTo: newTask.data.assignedTo ?? null,
+        assignedTo: newTask.data.assignedTo ?? null,
       };
-
-      // console.log("Created Task:", formattedTask);
       onCreate(formattedTask);
-
       toast.success("Task created successfully!");
-
       onClose();
     } catch (error) {
       console.error("Full error:", error.response?.data);
-      console.error("Error creating task:", error);
       toast.error(error.response?.data?.message || "Failed to create task");
+    } finally {
+      setIsSubmitting(false); // 👈 re-enable on success or error
     }
   };
 
@@ -179,7 +177,7 @@ const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
               label="Assign To"
               value={form.assignedTo}
               onChange={(value) => {
-                console.log("Dropdown returned:", value); 
+                console.log("Dropdown returned:", value);
                 setForm((prev) => ({ ...prev, assignedTo: value }));
               }}
               options={members}
@@ -199,17 +197,6 @@ const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
             </div>
           </div>
 
-          {/* Personal */}
-          <label className="flex items-center gap-2 text-[16px] max-[500px]:text-[12px]">
-            <input
-              type="checkbox"
-              name="personal"
-              checked={form.personal}
-              onChange={handleChange}
-            />
-            Mark as personal task
-          </label>
-
           {/* Actions */}
           <div className="flex justify-center gap-3 pt-4 max-[325px]:flex-col-reverse max-[325px]:w-full">
             <button
@@ -221,9 +208,10 @@ const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
             </button>
             <button
               type="submit"
-              className="w-[247px] py-2 bg-green-600 text-white rounded-lg text-[15px] max-[325px]:w-full"
+              disabled={isSubmitting}
+              className="w-[247px] py-2 bg-green-600 text-white rounded-lg text-[15px] max-[325px]:w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              + Create Task
+              {isSubmitting ? "Creating..." : "+ Create Task"}
             </button>
           </div>
         </form>
