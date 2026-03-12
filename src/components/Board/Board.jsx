@@ -5,7 +5,7 @@ import {
 import { useDroppable } from "@dnd-kit/core";
 import TaskCard from "../Taskcard/Taskcard";
 
-const Board = ({ board, projectId , onDeleteTask}) => {
+const Board = ({ board, projectId , onDeleteTask, onRefresh, onTaskUpdate }) => {
   const { setNodeRef } = useDroppable({ id: board.id });
   const taskCount = board.tasks.length;
 
@@ -40,6 +40,8 @@ const Board = ({ board, projectId , onDeleteTask}) => {
                 boardId={board.id}
                 projectId={projectId}
                onDelete={onDeleteTask}
+               onRefresh={onRefresh}
+                onUpdate={onTaskUpdate}
               />
             ))
           )}

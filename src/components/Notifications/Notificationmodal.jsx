@@ -141,6 +141,7 @@ const Notificationmodal = ({ onClose }) => {
   const fetchNotifications = useCallback(async () => {
     try {
       const res = await getMyNotifications();
+      console.log("Fetched notifications:", res);
       const data = Array.isArray(res.data) ? res.data : [];
       // Normalize id field
       setNotifications(data.map((n) => ({ ...n, id: n.id || n._id })));
