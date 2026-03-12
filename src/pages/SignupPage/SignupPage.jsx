@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./SignupPage.css";
 import alt from "../../assets/alt.svg";
 import { LuUserPen } from "react-icons/lu";
-import { FaEnvelope } from "react-icons/fa";
+import { FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdLock } from "react-icons/md";
 import { CiLock } from "react-icons/ci";
 import { useNavigate } from "react-router";
@@ -10,6 +10,22 @@ import { Link } from "react-router";
 import { registerUser } from "../../services/authService";
 import { toast } from "react-toastify";
 import LoadingButton from "../../components/loadingButton/LoadingButton";
+
+const getPasswordStrength = (password) => {
+  if (!password) return null;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
+  const isLong = password.length >= 8;
+
+  const score = [hasUpper, hasLower, hasNumber, hasSpecial, isLong].filter(Boolean).length;
+
+  if (score <= 2) return { label: "Weak", color: "text-red-500" };
+  if (score === 3) return { label: "Fair", color: "text-yellow-500" };
+  if (score === 4) return { label: "Good", color: "text-blue-500" };
+  return { label: "Strong", color: "text-green-500" };
+};
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -23,79 +39,59 @@ const SignupPage = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Handle input changes
+  const passwordStrength = getPasswordStrength(formData.password);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-
-    // Remove error when user starts typing
-    setErrors({
-      ...errors,
-      [name]: "",
-    });
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+    setErrors({ ...errors, [name]: "" });
   };
 
-  // Validation function
   const validate = () => {
     const newErrors = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
-    }
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Enter a valid email address";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    if (!formData.agree) {
-      newErrors.agree = "You must agree to the terms";
-    }
-
+    if (!formData.username.trim()) newErrors.username = "Username is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Enter a valid email address";
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+    if (!formData.confirmPassword) newErrors.confirmPassword = "Please confirm your password";
+    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
+    if (!formData.agree) newErrors.agree = "You must agree to the terms";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const isValid = validate();
-    if (!isValid) return;
-
+    if (!validate()) return;
     setLoading(true);
-
     try {
-      const res = await registerUser(formData);
+      // Include inviteToken if present
+      const inviteToken = localStorage.getItem("inviteToken");
+      const payload = inviteToken
+        ? { ...formData, inviteToken }
+        : formData;
+
+      const res = await registerUser(payload);
 
       if (res.success) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
         localStorage.setItem("token", res.data.token);
         toast.success(res.message);
+
+        // Handle invite redirect
+        if (inviteToken) {
+          localStorage.removeItem("inviteToken");
+          navigate(`/invite?token=${inviteToken}`);
+        } else {
+          navigate("/dashboard");
+        }
       } else {
         toast.error(res.message);
       }
-
-      navigate("/dashboard");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
@@ -105,8 +101,8 @@ const SignupPage = () => {
 
   return (
     <div className="signup-container flex items-center justify-center">
-      <div className=" flex max-w-[900px] w-[80%] justify-between max-[980px]:gap-5 max-[650px]:justify-center max-[400px]:w-90% max-[329%]:w-99%">
-        <div className=" flex justify-center items-center max-[650px]:hidden">
+      <div className="flex max-w-[900px] w-[80%] justify-between max-[980px]:gap-5 max-[650px]:justify-center max-[400px]:w-90%">
+        <div className="flex justify-center items-center max-[650px]:hidden">
           <img src={alt} alt="illustration" />
         </div>
 
@@ -117,46 +113,28 @@ const SignupPage = () => {
           <p className="right-p">Simple task management for teams</p>
 
           <form onSubmit={handleSubmit} className="signup-form max-[400px]:p-2">
-            <div className=" text-center w-full">
+            <div className="text-center w-full">
               <h3 className="signup-h3">Create an Account</h3>
               <p className="signup-p pt-2">Sign up to continue to TaskFlow</p>
             </div>
 
             {/* Username */}
             <div className="form-div">
-              <span>
-                <LuUserPen />
-              </span>
-              <input
-                type="text"
-                name="username"
-                placeholder="Enter Username"
-                value={formData.username}
-                onChange={handleChange}
-              />
+              <span><LuUserPen /></span>
+              <input type="text" name="username" placeholder="Enter Username" value={formData.username} onChange={handleChange} />
             </div>
             {errors.username && <p className="error">{errors.username}</p>}
 
             {/* Email */}
             <div className="form-div">
-              <span>
-                <FaEnvelope />
-              </span>
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter Email"
-                value={formData.email}
-                onChange={handleChange}
-              />
+              <span><FaEnvelope /></span>
+              <input type="email" name="email" placeholder="Enter Email" value={formData.email} onChange={handleChange} />
             </div>
             {errors.email && <p className="error">{errors.email}</p>}
 
             {/* Password */}
             <div className="form-div">
-              <span>
-                <MdLock />
-              </span>
+              <span><MdLock /></span>
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -164,63 +142,55 @@ const SignupPage = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
-              <span
-                className="show-password"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {/* {showPassword ? "Hide" : "Show"} */}
+              <span className="cursor-pointer  hover:text-gray-600 ml-auto" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
+            {/* Password strength */}
+            {formData.password && passwordStrength && (
+              <p className={`text-xs mt-1 mb-1 font-medium ${passwordStrength.color}`}>
+               {passwordStrength.label}
+                {passwordStrength.label === "Weak" && " — add caps, numbers or symbols"}
+                {passwordStrength.label === "Fair" && " — almost there!"}
+              </p>
+            )}
             {errors.password && <p className="error">{errors.password}</p>}
 
             {/* Confirm Password */}
             <div className="form-div">
-              <span>
-                <CiLock />
-              </span>
+              <span><CiLock /></span>
               <input
-                type={showPassword ? "text" : "password"}
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
               />
+              <span className="cursor-pointer  hover:text-gray-600 ml-auto" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
-            {errors.confirmPassword && (
-              <p className="error">{errors.confirmPassword}</p>
-            )}
+            {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
 
             {/* Checkbox */}
             <div className="checkbox-div">
-              <input
-                type="checkbox"
-                name="agree"
-                checked={formData.agree}
-                onChange={handleChange}
-              />
+              <input type="checkbox" name="agree" checked={formData.agree} onChange={handleChange} />
               <label>I agree to all terms</label>
             </div>
             {errors.agree && <p className="error">{errors.agree}</p>}
 
-            <LoadingButton
-              loading={loading}
-              text="Register"
-              loadingText=""
-              className="register-btn cursor-pointer"
-              type="submit"
-            />
+            <LoadingButton loading={loading} text="Register" loadingText="" className="register-btn cursor-pointer" type="submit" />
 
             <p className="last-p">
               Already have an account?{" "}
-              <span className=" text-green-500">
-                {" "}
-                <Link to="/Signin" >Log in</Link>
-              </span>
+              <span className="text-green-500"><Link to="/Signin">Log in</Link></span>
             </p>
           </form>
-           <p className=" font-semibold text-[16px] w-[335px] text-center place-self-center mt-7 max-[360px]:w-full">
-            By continuing, you agree to TaskFlow’s <span className=" text-[#1A73E8]">Terms of Service</span>{" "}
-            and <span className=" text-[#1A73E8]"> Privacy Policy</span>
+
+          <p className="font-semibold text-[16px] w-[335px] text-center place-self-center mt-7 max-[360px]:w-full">
+            By continuing, you agree to TaskFlow's{" "}
+            <span className="text-[#1A73E8]">Terms of Service</span> and{" "}
+            <span className="text-[#1A73E8]">Privacy Policy</span>
           </p>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { inviteMember } from "../../services/authService";
+import {addMember } from "../../services/authService";
 import { toast } from "react-toastify";
 
 const InviteMemberModal = ({ onClose, projectId }) => {
@@ -36,7 +36,7 @@ const InviteMemberModal = ({ onClose, projectId }) => {
 
     try {
       setIsSending(true);
-      const res = await inviteMember(projectId.toString().trim(), email.trim());
+      const res = await addMember(projectId.toString().trim(), email.trim());
       setSendSuccess(true);
       setEmail("");
       setTimeout(() => setSendSuccess(false), 2000);

@@ -11,41 +11,41 @@ const Acceptinvitepage = () => {
   const [message, setMessage] = useState("");
   const hasRun = useRef(false);
 
-  useEffect(() => {
-    if (hasRun.current) return;
-    hasRun.current = true;
+useEffect(() => {
+  if (hasRun.current) return;
+  hasRun.current = true;
 
-    const token = new URLSearchParams(window.location.search).get("token"); // ← read directly
+  const token = new URLSearchParams(window.location.search).get("token");
 
-    if (!token) {
+  if (!token) {
+    setStatus("error");
+    setMessage("Invalid invite link. No token found.");
+    return;
+  }
+
+  // If not logged in, save token and redirect to login
+  const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    localStorage.setItem("inviteToken", token);
+    navigate("/Signin");
+    return;
+  }
+
+  // Already logged in — accept immediately
+  const accept = async () => {
+    try {
+      const res = await acceptInvitation(token);
+      setStatus("success");
+      setMessage(res.message || "You have successfully joined the project!");
+      setTimeout(() => navigate(`/dashboard/projects/${res.projectId}`), 2500);
+    } catch (err) {
       setStatus("error");
-      setMessage("Invalid invite link. No token found.");
-      return;
+      setMessage(err.response?.data?.message || "This invite link is invalid or has expired.");
     }
+  };
 
-    const accept = async () => {
-      try {
-        const res = await acceptInvitation(token);
-        setStatus("success");
-        setMessage(res.message || "You have successfully joined the project!");
-        setTimeout(() => navigate(`/dashboard/projects/${res.projectId}`), 2500);
-      } catch (err) {
-        if (err.response?.status === 401) {
-          setStatus("auth");
-          return;
-        }
-        setStatus("error");
-        setMessage(
-          err.response?.data?.message ||
-            "This invite link is invalid or has expired.",
-        );
-      }
-    };
-
-    accept();
-  }, []);
-
-
+  accept();
+}, []);
   return (
     <div className="min-h-screen bg-[url('/src/assets/istockphoto.png')] flex items-center justify-center px-4 font-['inter']">
       <motion.div
@@ -164,35 +164,7 @@ const Acceptinvitepage = () => {
           </>
         )}
 
-        {/* ── Auth required ── */}
-        {status === "auth" && (
-          <>
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="w-14 h-14 rounded-full  flex items-center justify-center mx-auto mb-5 bg-green-400"
-            >
-              <RiLoginBoxLine size={24} />
-            </motion.div>
-            <h1 className="text-lg font-semibold text-gray-900 mb-1">
-              Login Required
-            </h1>
-            <p className="text-sm text-gray-500 mb-6">
-              You need to be logged in to accept this invitation.
-            </p>
-            <button
-              onClick={() => {
-                const currentUrl =
-                  window.location.pathname + window.location.search;
-                navigate(`/Signin?redirect=${encodeURIComponent(currentUrl)}`);
-              }}
-              className="w-full py-2.5 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition"
-            >
-              Login to Accept Invite
-            </button>
-          </>
-        )}
+     
       </motion.div>
     </div>
   );
