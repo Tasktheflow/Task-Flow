@@ -5,7 +5,7 @@ import { LuUserPen } from "react-icons/lu";
 import { FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdLock } from "react-icons/md";
 import { CiLock } from "react-icons/ci";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { Link } from "react-router";
 import { registerUser } from "../../services/authService";
 import { toast } from "react-toastify";
@@ -19,7 +19,9 @@ const getPasswordStrength = (password) => {
   const hasSpecial = /[^A-Za-z0-9]/.test(password);
   const isLong = password.length >= 8;
 
-  const score = [hasUpper, hasLower, hasNumber, hasSpecial, isLong].filter(Boolean).length;
+  const score = [hasUpper, hasLower, hasNumber, hasSpecial, isLong].filter(
+    Boolean,
+  ).length;
 
   if (score <= 2) return { label: "Weak", color: "text-red-500" };
   if (score === 3) return { label: "Fair", color: "text-yellow-500" };
@@ -37,6 +39,7 @@ const SignupPage = () => {
   });
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -54,11 +57,15 @@ const SignupPage = () => {
     const newErrors = {};
     if (!formData.username.trim()) newErrors.username = "Username is required";
     if (!formData.email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Enter a valid email address";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Enter a valid email address";
     if (!formData.password) newErrors.password = "Password is required";
-    else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
-    if (!formData.confirmPassword) newErrors.confirmPassword = "Please confirm your password";
-    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
+    else if (formData.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "Please confirm your password";
+    else if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
     if (!formData.agree) newErrors.agree = "You must agree to the terms";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -71,9 +78,8 @@ const SignupPage = () => {
     try {
       // Include inviteToken if present
       const inviteToken = localStorage.getItem("inviteToken");
-      const payload = inviteToken
-        ? { ...formData, inviteToken }
-        : formData;
+      console.log("inviteToken at signup:", inviteToken);
+      const payload = inviteToken ? { ...formData, inviteToken } : formData;
 
       const res = await registerUser(payload);
 
@@ -82,12 +88,15 @@ const SignupPage = () => {
         localStorage.setItem("token", res.data.token);
         toast.success(res.message);
 
-        // Handle invite redirect
         if (inviteToken) {
           localStorage.removeItem("inviteToken");
-          navigate(`/invite?token=${inviteToken}`);
+        }
+
+        if (res.data.projectId) {
+          navigate(`/dashboard/projects/${res.data.projectId}`);
         } else {
-          navigate("/dashboard");
+          const redirect = searchParams.get("redirect");
+          navigate(redirect || "/dashboard");
         }
       } else {
         toast.error(res.message);
@@ -120,21 +129,39 @@ const SignupPage = () => {
 
             {/* Username */}
             <div className="form-div">
-              <span><LuUserPen /></span>
-              <input type="text" name="username" placeholder="Enter Username" value={formData.username} onChange={handleChange} />
+              <span>
+                <LuUserPen />
+              </span>
+              <input
+                type="text"
+                name="username"
+                placeholder="Enter Username"
+                value={formData.username}
+                onChange={handleChange}
+              />
             </div>
             {errors.username && <p className="error">{errors.username}</p>}
 
             {/* Email */}
             <div className="form-div">
-              <span><FaEnvelope /></span>
-              <input type="email" name="email" placeholder="Enter Email" value={formData.email} onChange={handleChange} />
+              <span>
+                <FaEnvelope />
+              </span>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter Email"
+                value={formData.email}
+                onChange={handleChange}
+              />
             </div>
             {errors.email && <p className="error">{errors.email}</p>}
 
             {/* Password */}
             <div className="form-div">
-              <span><MdLock /></span>
+              <span>
+                <MdLock />
+              </span>
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -142,15 +169,21 @@ const SignupPage = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
-              <span className="cursor-pointer  hover:text-gray-600 ml-auto" onClick={() => setShowPassword(!showPassword)}>
+              <span
+                className="cursor-pointer  hover:text-gray-600 ml-auto"
+                onClick={() => setShowPassword(!showPassword)}
+              >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
             {/* Password strength */}
             {formData.password && passwordStrength && (
-              <p className={`text-xs mt-1 mb-1 font-medium ${passwordStrength.color}`}>
-               {passwordStrength.label}
-                {passwordStrength.label === "Weak" && " — add caps, numbers or symbols"}
+              <p
+                className={`text-xs mt-1 mb-1 font-medium ${passwordStrength.color}`}
+              >
+                {passwordStrength.label}
+                {passwordStrength.label === "Weak" &&
+                  " — add caps, numbers or symbols"}
                 {passwordStrength.label === "Fair" && " — almost there!"}
               </p>
             )}
@@ -158,7 +191,9 @@ const SignupPage = () => {
 
             {/* Confirm Password */}
             <div className="form-div">
-              <span><CiLock /></span>
+              <span>
+                <CiLock />
+              </span>
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
@@ -166,24 +201,42 @@ const SignupPage = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
               />
-              <span className="cursor-pointer  hover:text-gray-600 ml-auto" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+              <span
+                className="cursor-pointer  hover:text-gray-600 ml-auto"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+            {errors.confirmPassword && (
+              <p className="error">{errors.confirmPassword}</p>
+            )}
 
             {/* Checkbox */}
             <div className="checkbox-div">
-              <input type="checkbox" name="agree" checked={formData.agree} onChange={handleChange} />
+              <input
+                type="checkbox"
+                name="agree"
+                checked={formData.agree}
+                onChange={handleChange}
+              />
               <label>I agree to all terms</label>
             </div>
             {errors.agree && <p className="error">{errors.agree}</p>}
 
-            <LoadingButton loading={loading} text="Register" loadingText="" className="register-btn cursor-pointer" type="submit" />
+            <LoadingButton
+              loading={loading}
+              text="Register"
+              loadingText=""
+              className="register-btn cursor-pointer"
+              type="submit"
+            />
 
             <p className="last-p">
               Already have an account?{" "}
-              <span className="text-green-500"><Link to="/Signin">Log in</Link></span>
+              <span className="text-green-500">
+                <Link to="/Signin">Log in</Link>
+              </span>
             </p>
           </form>
 

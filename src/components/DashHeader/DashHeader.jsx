@@ -1,37 +1,112 @@
 import React from "react";
-import { Search, Bell, Plus } from "lucide-react";
+import { Search } from "lucide-react";
 import Tasklogo from "../../assets/Tasklogo.png";
 import { FiMenu } from "react-icons/fi";
 import profilepic from "../../assets/defelaut.jpg";
 import Notificationmodal from "../Notifications/Notificationmodal";
-import { useState, useEffect} from "react";
-import { AnimatePresence } from "framer-motion";
-import { getMyNotifications } from "../../services/authService";
+import { useState, useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  getMyNotifications,
+  getMyProjects,
+  getTasks,
+} from "../../services/authService";
+import { useNavigate } from "react-router";
 
 const DashHeader = ({ setSidebarOpen }) => {
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState({ projects: [], tasks: [] });
+  const [showResults, setShowResults] = useState(false);
+  const [allProjects, setAllProjects] = useState([]);
+  const [allTasks, setAllTasks] = useState([]);
+  const searchRef = useRef(null);
+  const navigate = useNavigate();
 
+  // Fetch data once on mount
   useEffect(() => {
-  const fetchCount = async () => {
-    try {
-      const res = await getMyNotifications();
-      const data = Array.isArray(res.data) ? res.data : [];
-      setUnreadCount(data.filter((n) => !n.read).length);
-    } catch (err) {
-      console.error(err);
+    const fetchCount = async () => {
+      try {
+        const res = await getMyNotifications();
+        const data = Array.isArray(res.data) ? res.data : [];
+        setUnreadCount(data.filter((n) => !n.read).length);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const fetchSearchData = async () => {
+      try {
+        const [projectsRes, tasksRes] = await Promise.allSettled([
+          getMyProjects(),
+          getTasks(),
+        ]);
+        if (projectsRes.status === "fulfilled")
+          setAllProjects(projectsRes.value.data || []);
+        if (tasksRes.status === "fulfilled")
+          setAllTasks(tasksRes.value.data || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchCount();
+    fetchSearchData();
+  }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Filter on query change
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults({ projects: [], tasks: [] });
+      setShowResults(false);
+      return;
     }
+
+    const q = query.toLowerCase();
+    const matchedProjects = allProjects.filter((p) =>
+      p.projectTitle?.toLowerCase().includes(q),
+    );
+    const matchedTasks = allTasks.filter((t) =>
+      t.title?.toLowerCase().includes(q),
+    );
+
+    setResults({ projects: matchedProjects, tasks: matchedTasks });
+    setShowResults(true);
+  }, [query, allProjects, allTasks]);
+
+  const handleProjectClick = (project) => {
+    setQuery("");
+    setShowResults(false);
+    navigate(`/dashboard/projects/${project._id}`);
   };
-  fetchCount();
-}, []);
+
+  const handleTaskClick = (task) => {
+    setQuery("");
+    setShowResults(false);
+    navigate(`/dashboard/projects/${task.project}`);
+  };
+
+  const hasResults = results.projects.length > 0 || results.tasks.length > 0;
 
   return (
     <div>
-      <header className="bg-white  px-[57px] py-5 shadow-[0px_4px_12px_0px_#00000012] max-[900px]:px-5 max-[500px]:py-2">
-        <div className="flex items-center justify-between ">
-          <div className=" flex items-center gap-8 max-[800px]:gap-4">
+      <header className="bg-white px-[57px] py-5 shadow-[0px_4px_12px_0px_#00000012] max-[900px]:px-5 max-[500px]:py-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-8 max-[800px]:gap-4">
             <button
               onClick={() => setSidebarOpen((prev) => !prev)}
               className="hidden max-[1250px]:block text-green-600"
@@ -42,23 +117,102 @@ const DashHeader = ({ setSidebarOpen }) => {
               <img src={Tasklogo} alt="logo" />
             </div>
           </div>
-          <div className=" max-w-[695px] w-[48.3%]">
+
+          {/* Search */}
+          <div className="max-w-[695px] w-[48.3%]" ref={searchRef}>
             <div className="relative flex items-center gap-2">
               <div className="relative flex-1 shadow-[-1px_4px_10px_0px_#0000000A,-4px_17px_18px_0px_#00000008,-9px_39px_24px_0px_#00000005,-17px_69px_28px_0px_#00000003,-26px_108px_31px_0px_#00000000] rounded-lg">
                 <input
                   type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => hasResults && setShowResults(true)}
                   placeholder="Search your task here..."
-                  className="w-full pl-4 pr-12 py-2.75 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300 text-gray-600 placeholder-gray-400 placeholder:font-['Montserrat', sans-serif;] placeholder:text-[12px] placeholder:font-semibold max-[500px]:pr-1 max-[500px]:py-2 max-[450px]:hidden"
+                  className="w-full pl-4 pr-12 py-2.75 bg-gray-50 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300 text-gray-600 placeholder-gray-400 placeholder:font-['Montserrat',sans-serif] placeholder:text-[12px] placeholder:font-semibold max-[500px]:pr-1 max-[500px]:py-2 max-[450px]:hidden"
                 />
-                <button className="absolute right-0 top-1/2 -translate-y-1/2 w-11  bg-[#05A301] rounded-lg flex items-center justify-center hover:bg-green-500 transition-colors cursor-pointer h-full">
+                <button className="absolute right-0 top-1/2 -translate-y-1/2 w-11 bg-[#05A301] rounded-lg flex items-center justify-center hover:bg-green-500 transition-colors cursor-pointer h-full">
                   <Search className="text-white max-[500px]:size-3" size={16} />
                 </button>
               </div>
+
+              {/* Dropdown */}
+              <AnimatePresence>
+                {showResults && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 z-50 max-h-[380px] overflow-y-auto"
+                  >
+                    {!hasResults ? (
+                      <p className="text-sm text-gray-400 text-center py-6">
+                        No results for "{query}"
+                      </p>
+                    ) : (
+                      <>
+                        {results.projects.length > 0 && (
+                          <div>
+                            <p className="text-[11px] font-semibold text-gray-400 uppercase px-4 pt-3 pb-1 tracking-wider">
+                              Projects
+                            </p>
+                            {results.projects.map((project) => (
+                              <div
+                                key={project._id}
+                                onClick={() => handleProjectClick(project)}
+                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer"
+                              >
+                                <span
+                                  className="w-3 h-3 rounded-full shrink-0"
+                                  style={{
+                                    backgroundColor: project.color || "#10B981",
+                                  }}
+                                />
+                                <span className="text-sm text-gray-700 truncate">
+                                  {project.projectTitle}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {results.tasks.map((task) => {
+                          // Find the project this task belongs to
+                          const taskProject = allProjects.find(
+                            (p) => p._id === task.project,
+                          );
+
+                          return (
+                            <div
+                              key={task._id}
+                              onClick={() => handleTaskClick(task)}
+                              className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 cursor-pointer"
+                            >
+                              <div className="flex flex-col gap-0.5">
+                                <span className="text-sm text-gray-700 truncate max-w-[70%]">
+                                  {task.title}
+                                </span>
+                                {taskProject && (
+                                  <span className="text-xs text-gray-400">
+                                    {taskProject.projectTitle} / {task.status}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
-          <div className="flex items-center gap-[30px] ">
+
+          {/* Right side */}
+          <div className="flex items-center gap-[30px]">
             <button
-              className="relative p-3  rounded-lg  transition-colors"
+              className="relative p-3 rounded-lg transition-colors"
               onClick={() => setShowNotifications((v) => !v)}
             >
               <svg
@@ -73,7 +227,6 @@ const DashHeader = ({ setSidebarOpen }) => {
                   fill="#05A301"
                 />
               </svg>
-
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                   {unreadCount}
@@ -88,11 +241,12 @@ const DashHeader = ({ setSidebarOpen }) => {
                 />
               )}
             </AnimatePresence>
-            <div className=" flex items-center gap-2 max-[900px]:hidden">
-              <div className="w-10 h-10 bg-gray-300  rounded-full flex items-center justify-center text-white font-semibold">
+
+            <div className="flex items-center gap-2 max-[900px]:hidden">
+              <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-white font-semibold">
                 <img src={profilepic} alt="profilepic" />
               </div>
-              <span className="font-medium text-gray-800 font-['Inter', sans-serif;] text-[15px]">
+              <span className="font-medium text-gray-800 font-['Inter',sans-serif] text-[15px]">
                 {user?.username}
               </span>
             </div>

@@ -138,7 +138,7 @@ const ProjectCard = ({ project, onRestore, onDelete, isOwner }) => (
 
       {/* Owner badge */}
       {isOwner && (
-        <span className="text-xs text-green-700 bg-green-50 px-2 py-1 rounded-full shrink-0 hidden sm:block">
+        <span className="text-xs  px-2 py-1 rounded-full shrink-0 hidden sm:block">
           Owner
         </span>
       )}
@@ -147,12 +147,12 @@ const ProjectCard = ({ project, onRestore, onDelete, isOwner }) => (
       <div className="flex gap-2 shrink-0">
         <button
           onClick={() => onRestore(project)}
-          className="text-xs px-3 py-1.5 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 transition font-medium whitespace-nowrap"
+          className="text-xs px-3 py-1.5 rounded-lg text-green-700 hover:bg-green-100 transition font-medium whitespace-nowrap"
         >
           Restore
         </button>
         {/* Only owner can permanently delete */}
-        {isOwner && (
+        {/* {isOwner && (
           <button
             onClick={() => onDelete(project)}
             className={`text-xs px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition font-medium whitespace-nowrap ${
@@ -163,7 +163,7 @@ const ProjectCard = ({ project, onRestore, onDelete, isOwner }) => (
           >
             Delete forever
           </button>
-        )}
+        )} */}
       </div>
     </div>
   </motion.div>
