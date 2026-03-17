@@ -92,7 +92,7 @@ const CreateTaskModal = ({ onClose, onCreate, projectId }) => {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-xl w-[700px] p-10 overflow-y-auto h-[95%] [&::-webkit-scrollbar]:w-0 max-[820px]:w-[90%] max-[450px]:p-4"
+        className="bg-white rounded-xl w-[600px] p-10 overflow-y-auto h-[95%] max-[820px]:w-[90%] max-[450px]:p-4"
       >
         <h2 className="text-[20px] font-semibold mb-[33px]">Create New Task</h2>
         <span className=" h-px w-full bg-[#74747480] block mb-[33px]"></span>

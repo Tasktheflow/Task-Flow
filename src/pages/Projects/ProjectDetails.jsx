@@ -251,13 +251,13 @@ const handleDragEnd = ({ active, over }) => {
       transition={{ duration: 0.25, ease: "easeOut" }}
       className=" w-full"
     >
-      <header className=" px-[57px] flex items-center w-full justify-between border-b border-[#A1A3AB4D] pb-[25px] max-[1250px]:px-3 max-[500px]:pb-2.5 max-[460px]:flex-col max-[460px]:items-start max-[460px]:gap-2">
+      <header className=" px-[57px] flex  w-full justify-between border-b border-[#A1A3AB4D] pb-[25px] max-[1250px]:px-3 max-[500px]:pb-2.5 max-[460px]:flex-col  max-[460px]:gap-2">
         <div>
-          <div className=" flex gap-7 max-[800px]:gap-2 max-[460px]:gap-10 max-[400px]:gap-4 max-[400px]:justify-between max-[400px]:w-full">
+          <div className=" flex gap-7 max-[800px]:gap-2 max-[460px]:gap-10 max-[400px]:gap-4 max-[600px]:justify-between max-[600px]:w-full max-[600px]:ml-auto ">
             <button onClick={() => navigate(-1)}>
               <IoArrowBackOutline size={24} className=" font-light" />
             </button>
-            <div className=" flex items-center justify-between gap-2.5">
+            <div className=" flex items-center justify-between gap-2.5 max-[600px]:ml-auto">
               {" "}
               <span
                 className=" size-[19px] block rounded-[50%] "
@@ -270,7 +270,7 @@ const handleDragEnd = ({ active, over }) => {
           </div>
           {/* <p className="mt-2 text-gray-600">{project.description}</p> */}
         </div>
-        <div className=" flex gap-[17px] items-center max-[550px]:text-[12px] max-[550px]:gap-1.5 max-[400px]:w-full max-[400px]:justify-between max-[284px]:flex-col  max-[284px]:gap-2.5">
+        <div className=" flex gap-[17px] items-center max-[550px]:justify-end  max-[550px]:text-[12px] max-[550px]:gap-1.5 max-[400px]:w-full max-[284px]:flex-col  max-[284px]:gap-2.5">
           <button
             className=" flex items-center justify-center bg-[#05A301] px-5 py-2.5 rounded-lg gap-2.5 text-white cursor-pointer max-[284px]:px-3 max-[284px]:py-2 max-[284px]:w-full max-[284px]:justify-center"
             onClick={() => setShowTaskModal(true)}

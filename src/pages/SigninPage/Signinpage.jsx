@@ -48,44 +48,52 @@ const Signinpage = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const validationErrors = validateForm();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
 
-    setErrors({});
+  setErrors({});
+  setLoading(true);
 
-    setLoading(true);
+  try {
+    // Include inviteToken if present
+    const inviteToken = localStorage.getItem("inviteToken");
+    const payload = inviteToken
+      ? { ...formData, inviteToken }
+      : formData;
 
-    try {
-      const res = await loginUser(formData);
-      if (res.success) {
-        toast.success(res.message);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        localStorage.setItem("token", res.data.token);
-        await fetchProjects();
+    const res = await loginUser(payload);
 
-        // Check for pending invite
-        const inviteToken = localStorage.getItem("inviteToken");
-        if (inviteToken) {
-          localStorage.removeItem("inviteToken");
-          navigate(`/invite?token=${inviteToken}`);
-        } else {
-          const redirect = searchParams.get("redirect");
-          navigate(redirect || "/dashboard");
-        }
-      } else {
-        toast.error(res.message);
+    if (res.success) {
+      toast.success(res.message);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
+      await fetchProjects();
+
+      // Clean up and redirect
+      if (inviteToken) {
+        localStorage.removeItem("inviteToken");
       }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+
+      if (res.data.projectId) {
+        navigate(`/dashboard/projects/${res.data.projectId}`);
+      } else {
+        const redirect = searchParams.get("redirect");
+        navigate(redirect || "/dashboard");
+      }
+    } else {
+      toast.error(res.message);
     }
-  };
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="login-container flex justify-center items-center">
@@ -104,7 +112,7 @@ const Signinpage = () => {
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
-            <h3 className="wel-h3">Welcome back</h3>
+            <h3 className="wel-h3">Welcome!</h3>
             <p className="subtitle">Login to continue to TaskFlow</p>
 
             <div className=" p-5 max-[430px]:p-0">

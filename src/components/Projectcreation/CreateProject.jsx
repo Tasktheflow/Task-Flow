@@ -166,7 +166,7 @@ const CreateProjectModal = ({ onClose, closeModal }) => {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
-      <div className="bg-white w-[52.64%] h-[99%] rounded-2xl p-10 overflow-auto [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:bg-gray-100 max-[1024px]:w-[80%] max-[600px]:w-[90%] max-[410px]:w-full max-[410px]:p-4">
+      <div className="bg-white  max-w-[600px] w-[52.64%] h-[99%] rounded-2xl p-10  overflow-auto  max-[1024px]:w-[80%] max-[600px]:w-[90%] max-[410px]:w-full max-[410px]:p-4">
         <form onSubmit={handleSubmit}>
           <h1 className="font-semibold text-[20px]">Create New Project</h1>
           <span className="w-full h-px bg-[#74747480] mt-[25px] block" />
