@@ -74,7 +74,7 @@ const handleSubmit = async (e) => {
       localStorage.setItem("token", res.data.token);
       await fetchProjects();
 
-      // Clean up and redirect
+      // Clean up and redirect user
       if (inviteToken) {
         localStorage.removeItem("inviteToken");
       }
